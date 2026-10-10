@@ -1,0 +1,96 @@
+{
+  "name": "Arpad – Chess Stats and Elo Calculator",
+  "short_name": "Arpad",
+  "description": "Sigue tus torneos de ajedrez, tu performance y la evolución de tu Elo ronda a ronda.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#121815",
+  "theme_color": "#121815",
+  "categories": [
+    "games",
+    "sports",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/1-inicio.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Pantalla principal"
+    },
+    {
+      "src": "screenshots/2-torneo.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Torneo ronda a ronda"
+    },
+    {
+      "src": "screenshots/3-performance.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Performance y Elo ganado"
+    },
+    {
+      "src": "screenshots/4-curiosidades.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Curiosidades"
+    },
+    {
+      "src": "screenshots/5-estadisticas.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Ocho secciones de estadísticas"
+    },
+    {
+      "src": "screenshots/6-nivel-rival.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Resultados según el nivel del rival"
+    },
+    {
+      "src": "screenshots/8-tarjeta.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tarjeta resumen para compartir"
+    },
+    {
+      "src": "screenshots/9-modo-oscuro.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Modo oscuro"
+    }
+  ],
+  "id": "./"
+}
