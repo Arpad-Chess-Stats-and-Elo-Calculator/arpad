@@ -65,7 +65,7 @@ img{max-width:100%}[hidden]{display:none!important}
 /* Layout: single centred column, like a scoresheet header; checkered rule as the one motif */
 :root{
   --bg:#eef0ec; --surface:#ffffff; --ink:#1b2420; --muted:#5d6a63;
-  --line:#cfd6d0; --accent:#1f6b4f; --accent-ink:#ffffff; --err:#b3261e; --good:#1f6b4f; --bad:#b3261e;
+  --line:#cfd6d0; --accent:#1f6b4f; --accent-ink:#ffffff; --err:#b3261e; --good:#1f6b4f; --bad:#b3261e; --rapid:#b7791f; --blitz:#3b6db3;
   --pw-bg:#fbfbf7; --pw-fg:#141414; --pb-bg:#161616; --pb-fg:#f6f6f2; --draw:#9aa5a0; --sqdark:#c9d6cf; --byebg:#f1f3f1; --byetag:#e2e6e3; --chip:#e4ebe6;
   --display:"Syne","Trebuchet MS",sans-serif;
   --body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -73,11 +73,11 @@ img{max-width:100%}[hidden]{display:none!important}
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#121815; --surface:#1a221e; --ink:#e7ece8; --muted:#9aa8a0;
-  --line:#2f3b35; --accent:#5fbf93; --accent-ink:#0d1411; --err:#f2a49c; --good:#5fbf93; --bad:#f2a49c;
+  --line:#2f3b35; --accent:#5fbf93; --accent-ink:#0d1411; --err:#f2a49c; --good:#5fbf93; --bad:#f2a49c; --rapid:#e3b45f; --blitz:#8fb3e8;
   --pb-bg:#050505; --draw:#6b7872; --sqdark:#223129; --byebg:#1e2622; --byetag:#2a3530; --chip:#26322c; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#121815; --surface:#1a221e; --ink:#e7ece8; --muted:#9aa8a0;
-  --line:#2f3b35; --accent:#5fbf93; --accent-ink:#0d1411; --err:#f2a49c; --good:#5fbf93; --bad:#f2a49c;
+  --line:#2f3b35; --accent:#5fbf93; --accent-ink:#0d1411; --err:#f2a49c; --good:#5fbf93; --bad:#f2a49c; --rapid:#e3b45f; --blitz:#8fb3e8;
   --pb-bg:#050505; --draw:#6b7872; --sqdark:#223129; --byebg:#1e2622; --byetag:#2a3530; --chip:#26322c; color-scheme:dark}
 
 html,body{min-height:100%}
@@ -129,7 +129,23 @@ button:focus-visible,input:focus-visible,select:focus-visible,.tcard:focus-visib
 .field{display:flex;flex-direction:column;gap:6px;min-width:0}
 .field label{font-size:14px;font-weight:500}
 .opt{color:var(--muted);font-weight:400}
+.eloform{display:flex;flex-direction:column;gap:12px}
+.elogrid{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:center}
+.elogrid .eh{font:600 12px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center;padding-bottom:2px}
+.elogrid .er{font:600 15px var(--body);color:var(--ink);padding-right:6px}
+.elogrid input{font:600 24px/1 var(--mono);text-align:center;height:60px;padding:0 6px;border-radius:10px;font-variant-numeric:tabular-nums}
+.elogrid input::placeholder{color:var(--muted);opacity:.45}
+.elogrid .enone{height:60px;box-sizing:border-box;border:1px dashed var(--line);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);text-align:center;padding:0 8px}
+.elogrid .enone b{font:600 18px/1 var(--mono)}.elogrid .enone small{font-size:11.5px;line-height:1.25}
+.elogrid .ek{font-family:var(--mono);font-size:18px}
+.elogrid .kseg{grid-column:2/-1;height:60px;box-sizing:border-box}
+.kseg button{font:600 18px var(--mono)}.kseg button[data-k="other"]{font:600 14px var(--body)}
+.ehint{margin:12px 0 0}
+#kOtherField{margin-top:12px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.natbnote{align-self:end;padding-bottom:10px}
+.status .vsub{font:500 11.5px/1.35 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums;margin-top:2px}
+.status .vsub span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hint{font-size:13px;color:var(--muted)}
 input,select{font:500 17px var(--mono);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:11px 12px;width:100%;box-sizing:border-box;min-width:0}
 input.name{font-family:var(--body)}
@@ -172,6 +188,9 @@ input.name{font-family:var(--body)}
 .rhead,.round{display:grid;grid-template-columns:92px 40px minmax(0,1fr) minmax(0,1.15fr) 52px;gap:10px;align-items:center}
 .rdelta{font:600 14px var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap;color:var(--ink)}
 .rtag{display:block;font:600 9px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.rdelta.ff select{font:inherit;color:inherit;background:transparent;border:1px dashed var(--line);border-radius:6px;padding:2px 5px;-webkit-appearance:none;appearance:none;text-align:right;cursor:pointer;max-width:100%}
+.rdelta.ff select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.rdelta.ff option{color:var(--ink);background:var(--surface)}
 .rdelta.pos{color:var(--good)} .rdelta.neg{color:var(--bad)} .rdelta.none{color:var(--muted)}
 .rhead span:last-child{text-align:right}
 .rhead{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 10px}
@@ -257,20 +276,20 @@ input.name{font-family:var(--body)}
 .sbar span{display:block;height:8px;border-radius:3px;background:var(--accent);min-width:2px}
 .sbar em{font-style:normal;min-width:3.2em}
 .recs{display:flex;flex-direction:column;gap:10px}
-.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-@media (min-width:620px){.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.tiles .rec{flex-direction:column;gap:10px;aspect-ratio:1;padding:14px;cursor:pointer;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent}
-.tiles .rec:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.tiles .rec::after{content:"+";position:absolute;top:10px;right:13px;font:500 18px/1 var(--mono);color:var(--muted)}
-.tiles .rec.open{grid-column:1/-1;aspect-ratio:auto;flex-direction:row;gap:14px;padding:14px 16px}
-.tiles .rec.open::after{content:"−"}
-.tiles .rec .lbl{white-space:normal;font-size:11px;letter-spacing:.06em;line-height:1.35;padding-right:12px}
-.tiles .rec .rv{font-size:28px}
-.tiles .rec:not(.open) .rtx>.rd{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;line-height:1.4}
-.tiles .rec:not(.open) .rx,.tiles .rec:not(.open) .minilist,.tiles .rec:not(.open) .rrow .rd{display:none}
-.tiles .rec:not(.open) .rrow{margin-top:2px}
-.tiles .rec:not(.open) .rrow .lbl{min-width:0}
-.tiles .rec:not(.open) .rrow .rv{font-size:20px}
+.cutiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:620px){.cutiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.cutiles .rec{flex-direction:column;gap:10px;aspect-ratio:1;padding:14px;cursor:pointer;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.cutiles .rec:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.cutiles .rec::after{content:"+";position:absolute;top:10px;right:13px;font:500 18px/1 var(--mono);color:var(--muted)}
+.cutiles .rec.open{grid-column:1/-1;aspect-ratio:auto;flex-direction:row;gap:14px;padding:14px 16px}
+.cutiles .rec.open::after{content:"−"}
+.cutiles .rec .lbl{white-space:normal;font-size:11px;letter-spacing:.06em;line-height:1.35;padding-right:12px}
+.cutiles .rec .rv{font-size:28px}
+.cutiles .rec:not(.open) .rtx>.rd{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;line-height:1.4}
+.cutiles .rec:not(.open) .rx,.cutiles .rec:not(.open) .minilist,.cutiles .rec:not(.open) .rrow .rd{display:none}
+.cutiles .rec:not(.open) .rrow{margin-top:2px}
+.cutiles .rec:not(.open) .rrow .lbl{min-width:0}
+.cutiles .rec:not(.open) .rrow .rv{font-size:20px}
 .rec{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
 .rtx{display:flex;flex-direction:column;min-width:0}
 .rv{font:600 24px/1.25 var(--mono);font-variant-numeric:tabular-nums}
@@ -423,57 +442,14 @@ input,select,textarea{font-size:max(16px,1em)}
   </header>
   <p class="pname" id="showName" hidden></p>
   <section class="status" aria-live="polite">
-    <div><span class="lbl" data-i18n="statusFide"></span><span class="val" id="showFide"></span></div>
-    <div><span class="lbl" data-i18n="statusNat"></span><span class="val" id="showNat"></span></div>
+    <div><span class="lbl" data-i18n="statusFide"></span><span class="val" id="showFide"></span><span class="vsub" id="showFideX"></span></div>
+    <div><span class="lbl" data-i18n="statusNat"></span><span class="val" id="showNat"></span><span class="vsub" id="showNatX"></span></div>
     <div><span class="lbl" data-i18n="statusK"></span><span class="val" id="showK"></span></div>
   </section>
   <div class="menu">
-    <button class="primary fill" id="openElo" type="button" aria-expanded="false" aria-controls="eloPanel">
+    <button class="primary fill" id="openElo" type="button">
       <span><span data-i18n="btnElo"></span><small data-i18n="btnEloSub"></small></span><span class="arrow" aria-hidden="true">→</span>
     </button>
-    <form class="panel" id="eloPanel" hidden novalidate>
-      <h3 data-i18n="panelTitle"></h3>
-      <div class="field">
-        <label for="nameInput" data-i18n="nameLabel"></label>
-        <input id="nameInput" class="name" type="text" maxlength="60" autocomplete="name">
-        <span class="hint" data-i18n="nameHint"></span>
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label for="fideInput" data-i18n="fideLabel"></label>
-          <input id="fideInput" type="number" inputmode="numeric" min="100" max="3500" step="1" placeholder="1850">
-        </div>
-        <div class="field">
-          <label for="natInput" data-i18n="natLabel"></label>
-          <input id="natInput" type="number" inputmode="numeric" min="100" max="3500" step="1" placeholder="1900">
-        </div>
-      </div>
-      <div class="field">
-        <label for="kSelect" data-i18n="kLabel"></label>
-        <select id="kSelect">
-          <option value="10">K = 10</option><option value="20" selected>K = 20</option><option value="40">K = 40</option>
-          <option value="other" data-i18n="kOther"></option>
-        </select>
-        <span class="hint" data-i18n="kHint"></span>
-      </div>
-      <div class="field" id="kOtherField" hidden>
-        <label for="kOtherInput" data-i18n="kOtherLabel"></label>
-        <input id="kOtherInput" type="text" inputmode="decimal" placeholder="15">
-      </div>
-      <div class="field">
-        <label for="natSysSel" data-i18n="natSysL"></label>
-        <select id="natSysSel">
-          <option value="fce" data-i18n="natSysFce"></option>
-          <option value="fide" data-i18n="natSysFide"></option>
-        </select>
-        <span class="hint" data-i18n="natSysHint"></span>
-      </div>
-      <p class="err" id="eloErr" role="alert"></p>
-      <div class="actions">
-        <button class="btn" type="button" id="eloCancel" data-i18n="cancel"></button>
-        <button class="btn go" type="submit" data-i18n="save"></button>
-      </div>
-    </form>
     <p class="toast" id="toast" aria-live="polite"></p>
     <button class="primary outline" id="openTour" type="button">
       <span><span data-i18n="btnTour"></span><small id="tourCount"></small></span><span class="arrow" aria-hidden="true">→</span>
@@ -493,6 +469,54 @@ input,select,textarea{font-size:max(16px,1em)}
 </section>
 
 <!-- TOURNAMENT LIST -->
+<section class="view" id="vElo" hidden>
+  <div class="topbar"><button class="back" type="button" data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg><span class="sr" data-i18n="home"></span></button><button class="homebtn" type="button" data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></button></div>
+  <h2 class="title" data-i18n="panelTitle"></h2>
+  <p class="lede" data-i18n="eloLede"></p>
+  <form id="eloPanel" class="eloform" novalidate>
+    <section class="card">
+      <div class="field">
+        <label for="nameInput" data-i18n="nameLabel"></label>
+        <input id="nameInput" class="name" type="text" maxlength="60" autocomplete="name">
+        <span class="hint" data-i18n="nameHint"></span>
+      </div>
+    </section>
+    <section class="card">
+      <div class="elogrid">
+        <span></span><span class="eh" id="eColF">FIDE</span><span class="eh" id="eColN" data-i18n="colNat"></span>
+        <span class="er" id="eRowC" data-i18n="rowC"></span><input id="fideInput" type="number" inputmode="numeric" min="100" max="3500" step="1" placeholder="–" aria-labelledby="eColF eRowC"><input id="natInput" type="number" inputmode="numeric" min="100" max="3500" step="1" placeholder="–" aria-labelledby="eColN eRowC">
+        <span class="er" id="eRowR" data-i18n="rowR"></span><input id="fideRInput" type="number" inputmode="numeric" min="100" max="3500" step="1" placeholder="–" aria-labelledby="eColF eRowR"><input id="natRInput" type="number" inputmode="numeric" min="100" max="3500" step="1" placeholder="–" aria-labelledby="eColN eRowR">
+        <span class="er" id="eRowB" data-i18n="rowB"></span><input id="fideBInput" type="number" inputmode="numeric" min="100" max="3500" step="1" placeholder="–" aria-labelledby="eColF eRowB"><span class="enone"><b aria-hidden="true">—</b><small data-i18n="natBShort"></small></span>
+        <span class="er ek" id="eRowK">K</span>
+        <div class="seg kseg" role="group" aria-labelledby="eRowK">
+          <button type="button" data-k="10">10</button><button type="button" data-k="20">20</button><button type="button" data-k="40">40</button><button type="button" data-k="other" data-i18n="kOtherShort"></button>
+        </div>
+      </div>
+      <select id="kSelect" hidden tabindex="-1" aria-hidden="true"><option value="10">10</option><option value="20" selected>20</option><option value="40">40</option><option value="other">other</option></select>
+      <div class="field" id="kOtherField" hidden>
+        <label for="kOtherInput" data-i18n="kOtherLabel"></label>
+        <input id="kOtherInput" type="text" inputmode="decimal" placeholder="15">
+      </div>
+      <p class="hint ehint" data-i18n="optEloHint"></p>
+      <p class="hint ehint" data-i18n="kHint"></p>
+    </section>
+    <section class="card">
+      <div class="field">
+        <label for="natSysSel" data-i18n="natSysL"></label>
+        <select id="natSysSel">
+          <option value="fce" data-i18n="natSysFce"></option>
+          <option value="fide" data-i18n="natSysFide"></option>
+        </select>
+        <span class="hint" data-i18n="natSysHint"></span>
+      </div>
+    </section>
+    <p class="err" id="eloErr" role="alert"></p>
+    <div class="actions">
+      <button class="btn" type="button" id="eloCancel" data-i18n="cancel"></button>
+      <button class="btn go" type="submit" data-i18n="save"></button>
+    </div>
+  </form>
+</section>
 <section class="view" id="vList" hidden>
   <div class="topbar"><button class="back" type="button" data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg><span class="sr" data-i18n="home"></span></button><button class="homebtn" type="button" data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></button></div>
   <h2 class="title" data-i18n="myTours"></h2>
@@ -549,6 +573,7 @@ input,select,textarea{font-size:max(16px,1em)}
         <option value="10">K = 10</option><option value="20">K = 20</option><option value="40">K = 40</option>
         <option value="other" data-i18n="kOther"></option>
       </select>
+      <span class="hint" id="tKHint" hidden></span>
     </div>
     <div class="field" id="tKOtherField" hidden>
       <label for="tKOther" data-i18n="kOtherLabel"></label>
@@ -780,6 +805,7 @@ input,select,textarea{font-size:max(16px,1em)}
         <option value="10">K = 10</option><option value="20">K = 20</option><option value="40">K = 40</option>
         <option value="other" data-i18n="kOther"></option>
       </select>
+      <span class="hint" id="mKHint" hidden></span>
     </div>
     <div class="field" id="mKOtherField" hidden>
       <label for="mKOther" data-i18n="kOtherLabel"></label>
@@ -833,7 +859,7 @@ input,select,textarea{font-size:max(16px,1em)}
 
 <script>
 const T={
- es:{natTag:"Nac.",noByes:"sin contar byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs tu Elo",natSysL:"Elo Nacional calculado con",natSysFce:"Reglamento FCE (Catalunya)",natSysFide:"Reglas FIDE (FEDA y otras federaciones)",natSysHint:"La FCE no limita la diferencia a 400 puntos, solo usa K20 o K40 y en rápidas siempre K20.",kNatL:"Coeficiente K Nacional",kNatFceHint:"FCE: K40 para nuevos jugadores (menos de 30 partidas) y sub-18 por debajo de 2300; K20 en el resto.",kNatFast:"FCE: en rápidas y blitz el K es siempre 20.",avgShort:"Media riv.",evrHead:(a,up)=>"Has sumado "+a+(a==="1,0"?" punto ":" puntos ")+(up?"más":"menos")+" de lo esperado",evrEq:"Has sumado lo esperado",evrEqSub:"Juegas justo a tu nivel Elo.",
+ es:{eloLede:"Tu Elo de cada lista y ritmo. Se usa para rellenar automáticamente cada torneo nuevo.",colNat:"Nacional",rowC:"Clásico",rowR:"Rápido",rowB:"Blitz",natBShort:"usa el rápido",kOtherShort:"Otra",fideRL:"FIDE rápido",fideBL:"FIDE blitz",natRL:"Nacional rápido",natBNote:"El blitz nacional usa tu Elo rápido.",optEloHint:"Rápido y blitz son opcionales: déjalos en blanco si no tienes Elo en ese ritmo.",kFast:"En rápidas y blitz la K es siempre 20.",curveNoteAll:"Con «Todos», cada ritmo tiene su propia línea: el Elo clásico, el rápido y el blitz son listas distintas. En el Nacional, el blitz cuenta en la lista de rápidas.",natTag:"Nac.",ffKLbl:"Puntos de la incomparecencia",ffKMine:"Según tu K (la de quien se presentó)",ffKRival:"Según la K de tu rival (quien se presentó)",noByes:"sin contar byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs tu Elo",natSysL:"Elo Nacional calculado con",natSysFce:"Reglamento FCE (Catalunya)",natSysFide:"Reglas FIDE (FEDA y otras federaciones)",natSysHint:"La FCE no limita la diferencia a 400 puntos, solo usa K20 o K40 y en rápidas siempre K20.",kNatL:"Coeficiente K Nacional",kNatFceHint:"FCE: K40 para nuevos jugadores (menos de 30 partidas) y sub-18 por debajo de 2300; K20 en el resto.",kNatFast:"FCE: en rápidas y blitz el K es siempre 20.",avgShort:"Media riv.",evrHead:(a,up)=>"Has sumado "+a+(a==="1,0"?" punto ":" puntos ")+(up?"más":"menos")+" de lo esperado",evrEq:"Has sumado lo esperado",evrEqSub:"Juegas justo a tu nivel Elo.",
   evrCmp:(a,up)=>{const n=Math.round(a*2)/2,ns=n.toLocaleString("es-ES");return a<0.75?"Es como unas tablas "+(up?"de más":"de menos"):a<1.25?"Es como "+(up?"una victoria de más":"una derrota de más"):"Es como si hubieras "+(up?"ganado ":"perdido ")+ns+" partidas de más"},
   evrOf:"puntos de",evrExp:"esperados",evrTitle:"Rendimiento frente a lo esperado",evrHelpT:"¿Qué es «lo esperado»?",evrHelpOk:"Entendido",
   evrHelp:["Según la diferencia de Elo, cada partida tiene una puntuación «lógica»: lo que sacarías de media si la jugaras muchas veces. Contra alguien de tu nivel es 0,5 puntos; contra alguien 200 puntos más fuerte, solo 0,24.","Arpad suma esas puntuaciones de todas tus partidas y las compara con los puntos que hiciste de verdad. Si haces más de lo esperado, juegas por encima de tu Elo y lo subes; si haces menos, lo bajas.","En la barra, la raya marca lo esperado y el relleno, lo que conseguiste."],
@@ -846,7 +872,7 @@ const T={
   bkBad:"Esto no parece una copia de Arpad válida.",bkFound:(n,name,d)=>"Copia encontrada: "+(n===1?"1 torneo":n+" torneos")+(name?" de "+name:"")+(d?" ("+d+")":"")+". ¿Cómo quieres importarla?",
   bkMerge:"Añadir a lo que tengo",bkReplace:"Reemplazar todo",bkReplaceQ:"Se borrarán tus torneos y tu Elo actual y se sustituirán por los de la copia. No se puede deshacer.",bkReplaceYes:"Sí, reemplazar",
   bkDone:n=>n===0?"No había torneos nuevos que añadir.":(n===1?"1 torneo importado.":n+" torneos importados."),nameLabel:"Nombre y apellidos",nameHint:"Opcional. Aparece en tus tarjetas resumen.",cardDone:"Imagen guardada.",cardEvo:"Evolución del Elo",cardBtn:"Tarjeta resumen",cardMissing:n=>"Completa todas las rondas (resultado y color) para generarla: "+(n===1?"falta 1":"faltan "+n)+".",cardShare:"Compartir",cardSave:"Descargar imagen",cardSaved:"Si no se ha descargado, mantén pulsada la imagen para guardarla.",cardNoShare:"No se puede compartir desde aquí. Mantén pulsada la imagen para guardarla.",cardFail:"No se ha podido generar la tarjeta.",cardEyebrow:"Arpad · resumen de torneo",cardElo:"Elo",cardRounds:"Rondas",cardAvg:"Rival medio",cardEst:"est.",lede:"Sigue tus torneos y la evolución de tu Elo ronda a ronda.",statusFide:"Elo FIDE",statusNat:"Elo Nacional",statusK:"K",none:"—",
-  btnElo:"Elo actual",btnEloSub:"Elo FIDE, Nacional y coeficiente K",panelTitle:"Tu Elo actual",fideLabel:"Elo FIDE",natLabel:"Elo Nacional",
+  btnElo:"Elo actual",btnEloSub:"Elo FIDE, Nacional y coeficiente K",panelTitle:"Tu Elo actual",fideLabel:"FIDE clásico",natLabel:"Nacional clásico",
   errFide:"Introduce un Elo FIDE entre 100 y 3500.",errNat:"Introduce un Elo Nacional entre 100 y 3500.",
   tValid:"Válido para",vPick:"Selecciona…",vFide:"Elo FIDE",vNat:"Elo Nacional",vBoth:"FIDE y Nacional",vNone:"Ninguno (amistoso)",friendlyWarn:"Torneo amistoso: no cuenta para las estadísticas.",noteFriendly:n=>(n===1?"1 torneo amistoso no cuenta":n+" torneos amistosos no cuentan")+" para las estadísticas.",
   vShort:{fide:"Válido FIDE",nat:"Válido Nacional",both:"Válido FIDE y Nacional",none:"Amistoso"},errValid:"Indica para qué Elo es válido el torneo.",
@@ -897,7 +923,7 @@ const T={
   diffTxt:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" respecto a tu Elo",total:"Total",startW:"inicio",endW:"final est.",
   errShrink:n=>"No se puede bajar a "+n+" rondas: hay datos en rondas posteriores. Bórralos primero.",
   vsFide:d=>(d>0?"+":"")+d+" vs tu Elo FIDE",vsNat:d=>(d>0?"+":"")+d+" vs tu Elo Nacional",
-  kLabel:"Coeficiente K",kHint:"K40 para nuevos jugadores y sub-18 bajo 2300 · K20 habitual · K10 a partir de 2400.",kOther:"Otro…",kOtherLabel:"Valor de K",
+  kLabel:"Coeficiente K",kHint:"K40 para nuevos jugadores y sub-18 bajo 2300 · K20 habitual · K10 a partir de 2400. En rápidas y blitz, siempre K20.",kOther:"Otro…",kOtherLabel:"Valor de K",
   cancel:"Cancelar",save:"Guardar",saved:"Guardado.",errElo:"Introduce un Elo entre 100 y 3500.",errK:"Introduce un K numérico mayor que 0.",
   btnTour:"Mis torneos",home:"Inicio",myTours:"Mis torneos",addTour:"Añadir torneo",newTour:"Nuevo torneo",tName:"Nombre del torneo",tRounds:"Número de rondas",
   tPlace:"Lugar",tStart:"Fecha de inicio",errStart:"La fecha de inicio es obligatoria.",tEnd:"Final",optional:"(opcional)",create:"Crear y abrir",
@@ -905,10 +931,10 @@ const T={
   noTours:"Aún no tienes torneos. Pulsa «Añadir torneo» para crear el primero.",tourN:n=>n===1?"1 torneo":n+" torneos",tourNone:"Crea y sigue tus torneos",
   played:(a,b)=>a+" de "+b+" rondas",perf:"Performance",points:"Puntos",avgOpp:"Media rivales",
   hColor:"Color",hRound:"R",hOpp:"Elo rival",hRes:"Resultado",W:"B",B:"N",colW:"Blancas",colB:"Negras",
-  legend:"Resultados en notación estándar (blancas primero): los puntos se calculan según tu color. Con menos de 3 partidas valoradas la performance lleva «?» porque aún es poco fiable. La performance usa la tabla FIDE (media de rivales + dp) y solo cuenta partidas jugadas con Elo del rival; las incomparecencias suman puntos pero no entran en la performance. «Bye» es una ronda sin partida (descanso pedido): cuenta 0 puntos y no entra en la performance.",
+  legend:"Resultados en notación estándar (blancas primero): los puntos se calculan según tu color. Con menos de 3 partidas valoradas la performance lleva «?» porque aún es poco fiable. La performance usa la tabla FIDE (media de rivales + dp) y solo cuenta partidas jugadas con Elo del rival; las incomparecencias suman puntos pero no entran en la performance. En Elo Nacional valen K/4 de quien se presentó: toca la cifra de ±Elo para elegir ±5 o ±10. «Bye» es una ronda sin partida (descanso pedido): cuenta 0 puntos y no entra en la performance.",
   vsElo:d=>(d>0?"+":"")+d+" vs tu Elo",delTour:"Eliminar torneo",delConfirm:"Se borrará el torneo con todas sus rondas. Esta acción no se puede deshacer.",delYes:"Eliminar",
   footer:"Llamada así por Arpad Elo (1903–1992), creador del sistema de puntuación.",locale:"es-ES"},
- ca:{natTag:"Nac.",noByes:"sense comptar byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs el teu Elo",natSysL:"Elo Nacional calculat amb",natSysFce:"Reglament FCE (Catalunya)",natSysFide:"Regles FIDE (FEDA i altres federacions)",natSysHint:"La FCE no limita la diferència a 400 punts, només fa servir K20 o K40 i en ràpides sempre K20.",kNatL:"Coeficient K Nacional",kNatFceHint:"FCE: K40 per a jugadors nous (menys de 30 partides) i sub-18 per sota de 2300; K20 a la resta.",kNatFast:"FCE: en ràpides i llampecs la K és sempre 20.",avgShort:"Mitj. riv.",evrHead:(a,up)=>"Has sumat "+a+(a==="1,0"?" punt ":" punts ")+(up?"més":"menys")+" del que s'esperava",evrEq:"Has sumat el que s'esperava",evrEqSub:"Jugues just al teu nivell Elo.",
+ ca:{eloLede:"El teu Elo de cada llista i ritme. Serveix per omplir automàticament cada torneig nou.",colNat:"Nacional",rowC:"Clàssic",rowR:"Ràpid",rowB:"Blitz",natBShort:"fa servir el ràpid",kOtherShort:"Altra",fideRL:"FIDE ràpid",fideBL:"FIDE blitz",natRL:"Nacional ràpid",natBNote:"El blitz nacional fa servir el teu Elo ràpid.",optEloHint:"Ràpid i blitz són opcionals: deixa'ls en blanc si no tens Elo en aquest ritme.",kFast:"En ràpides i blitz la K és sempre 20.",curveNoteAll:"Amb «Tots», cada ritme té la seva línia: l'Elo clàssic, el ràpid i el blitz són llistes diferents. Al Nacional, el blitz compta a la llista de ràpides.",natTag:"Nac.",ffKLbl:"Punts de la incompareixença",ffKMine:"Segons la teva K (la de qui es va presentar)",ffKRival:"Segons la K del teu rival (qui es va presentar)",noByes:"sense comptar byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs el teu Elo",natSysL:"Elo Nacional calculat amb",natSysFce:"Reglament FCE (Catalunya)",natSysFide:"Regles FIDE (FEDA i altres federacions)",natSysHint:"La FCE no limita la diferència a 400 punts, només fa servir K20 o K40 i en ràpides sempre K20.",kNatL:"Coeficient K Nacional",kNatFceHint:"FCE: K40 per a jugadors nous (menys de 30 partides) i sub-18 per sota de 2300; K20 a la resta.",kNatFast:"FCE: en ràpides i llampecs la K és sempre 20.",avgShort:"Mitj. riv.",evrHead:(a,up)=>"Has sumat "+a+(a==="1,0"?" punt ":" punts ")+(up?"més":"menys")+" del que s'esperava",evrEq:"Has sumat el que s'esperava",evrEqSub:"Jugues just al teu nivell Elo.",
   evrCmp:(a,up)=>{const n=Math.round(a*2)/2,ns=n.toLocaleString("ca-ES");return a<0.75?"És com unes taules "+(up?"de més":"de menys"):a<1.25?"És com "+(up?"una victòria de més":"una derrota de més"):"És com si haguessis "+(up?"guanyat ":"perdut ")+ns+" partides de més"},
   evrOf:"punts de",evrExp:"esperats",evrTitle:"Rendiment respecte a l'esperat",evrHelpT:"Què és «l'esperat»?",evrHelpOk:"Entesos",
   evrHelp:["Segons la diferència d'Elo, cada partida té una puntuació «lògica»: el que trauries de mitjana si la juguessis moltes vegades. Contra algú del teu nivell és 0,5 punts; contra algú 200 punts més fort, només 0,24.","Arpad suma aquestes puntuacions de totes les teves partides i les compara amb els punts que vas fer de veritat. Si en fas més dels esperats, jugues per sobre del teu Elo i el puges; si en fas menys, el baixes.","A la barra, la ratlla marca l'esperat i l'emplenat, el que vas aconseguir."],
@@ -921,7 +947,7 @@ const T={
   bkBad:"Això no sembla una còpia d'Arpad vàlida.",bkFound:(n,name,d)=>"Còpia trobada: "+(n===1?"1 torneig":n+" tornejos")+(name?" de "+name:"")+(d?" ("+d+")":"")+". Com la vols importar?",
   bkMerge:"Afegir al que tinc",bkReplace:"Substituir-ho tot",bkReplaceQ:"S'esborraran els teus tornejos i el teu Elo actual i se substituiran pels de la còpia. No es pot desfer.",bkReplaceYes:"Sí, substituir",
   bkDone:n=>n===0?"No hi havia tornejos nous per afegir.":(n===1?"1 torneig importat.":n+" tornejos importats."),nameLabel:"Nom i cognoms",nameHint:"Opcional. Apareix a les teves targetes resum.",cardDone:"Imatge desada.",cardEvo:"Evolució de l'Elo",cardBtn:"Targeta resum",cardMissing:n=>"Completa totes les rondes (resultat i color) per generar-la: "+(n===1?"en falta 1":"en falten "+n)+".",cardShare:"Compartir",cardSave:"Descarregar imatge",cardSaved:"Si no s'ha descarregat, mantén premuda la imatge per desar-la.",cardNoShare:"No es pot compartir des d'aquí. Mantén premuda la imatge per desar-la.",cardFail:"No s'ha pogut generar la targeta.",cardEyebrow:"Arpad · resum de torneig",cardElo:"Elo",cardRounds:"Rondes",cardAvg:"Rival mitjà",cardEst:"est.",lede:"Segueix els teus tornejos i l'evolució del teu Elo ronda a ronda.",statusFide:"Elo FIDE",statusNat:"Elo Nacional",statusK:"K",none:"—",
-  btnElo:"Elo actual",btnEloSub:"Elo FIDE, Nacional i coeficient K",panelTitle:"El teu Elo actual",fideLabel:"Elo FIDE",natLabel:"Elo Nacional",
+  btnElo:"Elo actual",btnEloSub:"Elo FIDE, Nacional i coeficient K",panelTitle:"El teu Elo actual",fideLabel:"FIDE clàssic",natLabel:"Nacional clàssic",
   errFide:"Introdueix un Elo FIDE entre 100 i 3500.",errNat:"Introdueix un Elo Nacional entre 100 i 3500.",
   tValid:"Vàlid per a",vPick:"Selecciona…",vFide:"Elo FIDE",vNat:"Elo Nacional",vBoth:"FIDE i Nacional",vNone:"Cap (amistós)",friendlyWarn:"Torneig amistós: no compta per a les estadístiques.",noteFriendly:n=>(n===1?"1 torneig amistós no compta":n+" tornejos amistosos no compten")+" per a les estadístiques.",
   vShort:{fide:"Vàlid FIDE",nat:"Vàlid Nacional",both:"Vàlid FIDE i Nacional",none:"Amistós"},errValid:"Indica per a quin Elo és vàlid el torneig.",
@@ -972,7 +998,7 @@ const T={
   diffTxt:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" respecte al teu Elo",total:"Total",startW:"inici",endW:"final est.",
   errShrink:n=>"No es pot baixar a "+n+" rondes: hi ha dades en rondes posteriors. Esborra-les primer.",
   vsFide:d=>(d>0?"+":"")+d+" vs el teu Elo FIDE",vsNat:d=>(d>0?"+":"")+d+" vs el teu Elo Nacional",
-  kLabel:"Coeficient K",kHint:"K40 per a jugadors nous i sub-18 per sota de 2300 · K20 habitual · K10 a partir de 2400.",kOther:"Altres…",kOtherLabel:"Valor de K",
+  kLabel:"Coeficient K",kHint:"K40 per a jugadors nous i sub-18 per sota de 2300 · K20 habitual · K10 a partir de 2400. En ràpides i blitz, sempre K20.",kOther:"Altres…",kOtherLabel:"Valor de K",
   cancel:"Cancel·lar",save:"Desar",saved:"Desat.",errElo:"Introdueix un Elo entre 100 i 3500.",errK:"Introdueix una K numèrica més gran que 0.",
   btnTour:"Els meus tornejos",home:"Inici",myTours:"Els meus tornejos",addTour:"Afegir torneig",newTour:"Nou torneig",tName:"Nom del torneig",tRounds:"Nombre de rondes",
   tPlace:"Lloc",tStart:"Data d'inici",errStart:"La data d'inici és obligatòria.",tEnd:"Final",optional:"(opcional)",create:"Crear i obrir",
@@ -980,10 +1006,10 @@ const T={
   noTours:"Encara no tens tornejos. Prem «Afegir torneig» per crear el primer.",tourN:n=>n===1?"1 torneig":n+" tornejos",tourNone:"Crea i segueix els teus tornejos",
   played:(a,b)=>a+" de "+b+" rondes",perf:"Performance",points:"Punts",avgOpp:"Mitjana rivals",
   hColor:"Color",hRound:"R",hOpp:"Elo rival",hRes:"Resultat",W:"B",B:"N",colW:"Blanques",colB:"Negres",
-  legend:"Resultats en notació estàndard (blanques primer): els punts es calculen segons el teu color. Amb menys de 3 partides valorades la performance porta «?» perquè encara és poc fiable. La performance fa servir la taula FIDE (mitjana de rivals + dp) i només compta partides jugades amb Elo del rival; les incompareixences sumen punts però no entren a la performance. «Bye» és una ronda sense partida (descans demanat): compta 0 punts i no entra a la performance.",
+  legend:"Resultats en notació estàndard (blanques primer): els punts es calculen segons el teu color. Amb menys de 3 partides valorades la performance porta «?» perquè encara és poc fiable. La performance fa servir la taula FIDE (mitjana de rivals + dp) i només compta partides jugades amb Elo del rival; les incompareixences sumen punts però no entren a la performance. En Elo Nacional valen K/4 de qui es va presentar: toca la xifra de ±Elo per triar ±5 o ±10. «Bye» és una ronda sense partida (descans demanat): compta 0 punts i no entra a la performance.",
   vsElo:d=>(d>0?"+":"")+d+" vs el teu Elo",delTour:"Eliminar torneig",delConfirm:"S'esborrarà el torneig amb totes les rondes. Aquesta acció no es pot desfer.",delYes:"Eliminar",
   footer:"Anomenada així per Arpad Elo (1903–1992), creador del sistema de puntuació.",locale:"ca-ES"},
- en:{natTag:"Nat.",noByes:"excluding byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs your Elo",natSysL:"National Elo calculated with",natSysFce:"FCE rules (Catalonia)",natSysFide:"FIDE rules (FEDA and other federations)",natSysHint:"The FCE doesn't cap the difference at 400 points, only uses K20 or K40, and rapid is always K20.",kNatL:"National K-factor",kNatFceHint:"FCE: K40 for new players (fewer than 30 games) and under-18s below 2300; K20 otherwise.",kNatFast:"FCE: rapid and blitz always use K20.",avgShort:"Avg. opp.",evrHead:(a,up)=>"You scored "+a+(a==="1.0"?" point ":" points ")+(up?"more":"fewer")+" than expected",evrEq:"You scored as expected",evrEqSub:"You're playing right at your Elo level.",
+ en:{eloLede:"Your rating for each list and time control. It pre-fills every new tournament.",colNat:"National",rowC:"Classic",rowR:"Rapid",rowB:"Blitz",natBShort:"uses rapid",kOtherShort:"Other",fideRL:"FIDE rapid",fideBL:"FIDE blitz",natRL:"National rapid",natBNote:"National blitz uses your rapid rating.",optEloHint:"Rapid and blitz are optional: leave them blank if you have no rating at that time control.",kFast:"Rapid and blitz always use K20.",curveNoteAll:"With “All”, each time control has its own line: classic, rapid and blitz are separate rating lists. In the national list, blitz counts towards the rapid list.",natTag:"Nat.",ffKLbl:"Forfeit points",ffKMine:"Based on your K (the player who showed up)",ffKRival:"Based on your opponent's K (the player who showed up)",noByes:"excluding byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs your Elo",natSysL:"National Elo calculated with",natSysFce:"FCE rules (Catalonia)",natSysFide:"FIDE rules (FEDA and other federations)",natSysHint:"The FCE doesn't cap the difference at 400 points, only uses K20 or K40, and rapid is always K20.",kNatL:"National K-factor",kNatFceHint:"FCE: K40 for new players (fewer than 30 games) and under-18s below 2300; K20 otherwise.",kNatFast:"FCE: rapid and blitz always use K20.",avgShort:"Avg. opp.",evrHead:(a,up)=>"You scored "+a+(a==="1.0"?" point ":" points ")+(up?"more":"fewer")+" than expected",evrEq:"You scored as expected",evrEqSub:"You're playing right at your Elo level.",
   evrCmp:(a,up)=>{const n=Math.round(a*2)/2;return a<0.75?"That's like "+(up?"an extra draw":"one draw fewer"):a<1.25?"That's like "+(up?"an extra win":"an extra loss"):"That's as if you'd "+(up?"won ":"lost ")+n+" more games"},
   evrOf:"points out of",evrExp:"expected",evrTitle:"Performance vs expected",evrHelpT:"What does “expected” mean?",evrHelpOk:"Got it",
   evrHelp:["Based on the Elo difference, every game has a “logical” score: what you'd get on average if you played it many times. Against someone your level it's 0.5 points; against someone 200 points stronger, just 0.24.","Arpad adds up those scores across your games and compares them with the points you actually scored. Score more than expected and you're playing above your Elo, so it goes up; score less and it goes down.","On the bar, the line marks what was expected and the fill shows what you got."],
@@ -996,7 +1022,7 @@ const T={
   bkBad:"This doesn't look like a valid Arpad backup.",bkFound:(n,name,d)=>"Backup found: "+(n===1?"1 tournament":n+" tournaments")+(name?" from "+name:"")+(d?" ("+d+")":"")+". How do you want to import it?",
   bkMerge:"Add to what I have",bkReplace:"Replace everything",bkReplaceQ:"Your tournaments and current Elo will be deleted and replaced with the backup's. This can't be undone.",bkReplaceYes:"Yes, replace",
   bkDone:n=>n===0?"There were no new tournaments to add.":(n===1?"1 tournament imported.":n+" tournaments imported."),nameLabel:"Full name",nameHint:"Optional. Shown on your summary cards.",cardDone:"Image saved.",cardEvo:"Elo through the event",cardBtn:"Summary card",cardMissing:n=>"Complete every round (result and colour) to create it: "+n+" missing.",cardShare:"Share",cardSave:"Download image",cardSaved:"If it didn't download, press and hold the image to save it.",cardNoShare:"Sharing isn't available here. Press and hold the image to save it.",cardFail:"The card couldn't be created.",cardEyebrow:"Arpad · tournament summary",cardElo:"Elo",cardRounds:"Rounds",cardAvg:"Avg. opponent",cardEst:"est.",lede:"Track your tournaments and how your Elo moves round by round.",statusFide:"FIDE Elo",statusNat:"National Elo",statusK:"K",none:"—",
-  btnElo:"Current Elo",btnEloSub:"FIDE and national Elo and K-factor",panelTitle:"Your current Elo",fideLabel:"FIDE Elo",natLabel:"National Elo",
+  btnElo:"Current Elo",btnEloSub:"FIDE and national Elo and K-factor",panelTitle:"Your current Elo",fideLabel:"FIDE classic",natLabel:"National classic",
   errFide:"Enter a FIDE Elo between 100 and 3500.",errNat:"Enter a national Elo between 100 and 3500.",
   tValid:"Rated for",vPick:"Choose…",vFide:"FIDE Elo",vNat:"National Elo",vBoth:"FIDE and national",vNone:"Neither (friendly)",friendlyWarn:"Friendly tournament: it doesn't count in the statistics.",noteFriendly:n=>(n===1?"1 friendly tournament doesn't":n+" friendly tournaments don't")+" count in the statistics.",
   vShort:{fide:"FIDE rated",nat:"Nationally rated",both:"FIDE and nationally rated",none:"Friendly"},errValid:"Choose which Elo the tournament is rated for.",
@@ -1047,7 +1073,7 @@ const T={
   diffTxt:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs your Elo",total:"Total",startW:"start",endW:"est. end",
   errShrink:n=>"Can't reduce to "+n+" rounds: later rounds have data. Clear them first.",
   vsFide:d=>(d>0?"+":"")+d+" vs your FIDE Elo",vsNat:d=>(d>0?"+":"")+d+" vs your national Elo",
-  kLabel:"K-factor",kHint:"K40 for new players and under-18s below 2300 · K20 standard · K10 from 2400.",kOther:"Other…",kOtherLabel:"K value",
+  kLabel:"K-factor",kHint:"K40 for new players and under-18s below 2300 · K20 standard · K10 from 2400. Rapid and blitz always use K20.",kOther:"Other…",kOtherLabel:"K value",
   cancel:"Cancel",save:"Save",saved:"Saved.",errElo:"Enter an Elo between 100 and 3500.",errK:"Enter a numeric K greater than 0.",
   btnTour:"My tournaments",home:"Home",myTours:"My tournaments",addTour:"Add tournament",newTour:"New tournament",tName:"Tournament name",tRounds:"Number of rounds",
   tPlace:"Venue",tStart:"Start date",errStart:"The start date is required.",tEnd:"End",optional:"(optional)",create:"Create and open",
@@ -1055,7 +1081,7 @@ const T={
   noTours:"No tournaments yet. Tap “Add tournament” to create your first one.",tourN:n=>n===1?"1 tournament":n+" tournaments",tourNone:"Create and track your tournaments",
   played:(a,b)=>a+" of "+b+" rounds",perf:"Performance",points:"Points",avgOpp:"Avg. opponent",
   hColor:"Colour",hRound:"R",hOpp:"Opp. Elo",hRes:"Result",W:"W",B:"B",colW:"White",colB:"Black",
-  legend:"Results use standard notation (White first): points are worked out from your colour. With fewer than 3 rated games the performance shows “?” because it isn't reliable yet. Performance uses the FIDE table (average opponent + dp) and only counts games played against a rated opponent; forfeits add points but don't count towards performance. “Bye” is a round with no game (requested rest): it scores 0 points and doesn't count towards performance.",
+  legend:"Results use standard notation (White first): points are worked out from your colour. With fewer than 3 rated games the performance shows “?” because it isn't reliable yet. Performance uses the FIDE table (average opponent + dp) and only counts games played against a rated opponent; forfeits add points but don't count towards performance. In the national rating a forfeit is worth K/4 of the player who showed up: tap the ±Elo figure to choose ±5 or ±10. “Bye” is a round with no game (requested rest): it scores 0 points and doesn't count towards performance.",
   vsElo:d=>(d>0?"+":"")+d+" vs your Elo",delTour:"Delete tournament",delConfirm:"This deletes the tournament and all its rounds. It can't be undone.",delYes:"Delete",
   footer:"Named after Arpad Elo (1903–1992), who created the rating system.",locale:"en-GB"}
 };
@@ -1100,7 +1126,7 @@ function perfTxt(perf,n){return perf==null?"—":perf+(n<MIN_PERF?"?":"")
 
 /* views */
 let navPop=false;
-function show(v){["Home","List","Edit","Stats","Stat","About","Suggest","Donate","Backup"].forEach(x=>$("v"+x).hidden=x!==v);try{window.scrollTo(0,0)}catch(e){}
+function show(v){["Home","Elo","List","Edit","Stats","Stat","About","Suggest","Donate","Backup"].forEach(x=>$("v"+x).hidden=x!==v);try{window.scrollTo(0,0)}catch(e){}
   if(typeof edScroll==="function")edScroll();
   if(!navPop){try{history.pushState({v,id:current&&current.id,sec:curSec},"")}catch(e){}}}
 window.addEventListener("popstate",e=>{const st=e.state||{v:"Home"};
@@ -1111,6 +1137,7 @@ window.addEventListener("popstate",e=>{const st=e.state||{v:"Home"};
 function goState(st){navPop=true;
   try{if(st.v==="Edit"&&st.id&&tours.some(x=>x.id===st.id))openTour(st.id);
     else if(st.v==="Stat"&&st.sec){curSec=st.sec;chartSel=null;show("Stat");renderSec()}
+    else if(st.v==="Elo")openEloView();
     else if(st.v==="Stats"){show("Stats");renderHub()}
     else if(st.v==="List"||st.v==="Edit"){show("List");renderList()}
     else if(["About","Suggest","Donate","Backup"].includes(st.v))openInfo(st.v);
@@ -1128,6 +1155,9 @@ function renderStatic(){
 function renderHome(){
   [["showFide",player&&player.fide],["showNat",player&&player.nat],["showK",player&&player.k&&String(player.k)]].forEach(([id,v])=>{
     const el=$(id);el.textContent=v||t("none");el.classList.toggle("empty",!v)});
+  // rapid / blitz under the classic Elo, only when set
+  [["showFideX",[["rapid","fideR"],["blitz","fideB"]]],["showNatX",[["rapid","natR"]]]].forEach(([id,fs])=>{const el=$(id);el.replaceChildren();
+    fs.forEach(([m,f])=>{if(player&&player[f])el.append(mk("span",null,T[lang].modes[m]+" "+player[f]))});el.hidden=!el.childNodes.length});
   $("showName").textContent=player&&player.name||"";$("showName").hidden=!(player&&player.name);
   if($("demoBtn").textContent!==undefined&&typeof paintDemoBtn==="function")paintDemoBtn();
   $("tourCount").textContent=tours.length?T[lang].tourN(tours.length):t("tourNone");
@@ -1168,32 +1198,35 @@ const dateRange=tr=>tr.start&&tr.end&&tr.end!==tr.start?fmtDate(tr.start)+" – 
 document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",()=>{lang=b.dataset.lang;store.set("arpad.lang",lang);renderStatic();renderHome()}));
 
 /* Elo panel */
-function toggleElo(open){
-  $("eloPanel").hidden=!open;$("openElo").setAttribute("aria-expanded",open);$("eloErr").textContent="";
-  if(open){$("toast").textContent="";
-    if(player){$("nameInput").value=player.name||"";$("fideInput").value=player.fide||"";$("natInput").value=player.nat||"";
-      if([10,20,40].includes(player.k)){$("kSelect").value=String(player.k);$("kOtherInput").value=""}else{$("kSelect").value="other";$("kOtherInput").value=player.k}}
-    $("natSysSel").value=natSys();
-    $("kOtherField").hidden=$("kSelect").value!=="other";$("fideInput").focus()}
-}
-$("openElo").addEventListener("click",()=>toggleElo($("eloPanel").hidden));
-$("eloCancel").addEventListener("click",()=>toggleElo(false));
-$("kSelect").addEventListener("change",e=>{$("kOtherField").hidden=e.target.value!=="other";if(e.target.value==="other")$("kOtherInput").focus()});
+function paintKSeg(){const v=$("kSelect").value;document.querySelectorAll(".kseg button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.k===v)));$("kOtherField").hidden=v!=="other"}
+function openEloView(){$("eloErr").textContent="";$("toast").textContent="";
+  const P=player||{};$("nameInput").value=P.name||"";
+  [["fideInput","fide"],["natInput","nat"],["fideRInput","fideR"],["fideBInput","fideB"],["natRInput","natR"]].forEach(([id,f])=>$(id).value=P[f]||"");
+  const k=P.k||20;if([10,20,40].includes(k)){$("kSelect").value=String(k);$("kOtherInput").value=""}else{$("kSelect").value="other";$("kOtherInput").value=k}
+  $("natSysSel").value=natSys();paintKSeg();show("Elo")}
+$("openElo").addEventListener("click",openEloView);
+$("eloCancel").addEventListener("click",()=>{show("Home");renderHome()});
+document.querySelectorAll(".kseg button").forEach(b=>b.addEventListener("click",()=>{$("kSelect").value=b.dataset.k;paintKSeg();if(b.dataset.k==="other")$("kOtherInput").focus()}));
 $("eloPanel").addEventListener("submit",ev=>{ev.preventDefault();
   const fide=Math.round(Number($("fideInput").value)),nat=Math.round(Number($("natInput").value));
   if(!$("fideInput").value||!(fide>=100&&fide<=3500)){$("eloErr").textContent=t("errFide");$("fideInput").focus();return}
   if(!$("natInput").value||!(nat>=100&&nat<=3500)){$("eloErr").textContent=t("errNat");$("natInput").focus();return}
+  const opt={};for(const [id,f] of [["fideRInput","fideR"],["fideBInput","fideB"],["natRInput","natR"]]){const raw=$(id).value.trim(),v=Math.round(Number(raw));
+    if(raw&&!(v>=100&&v<=3500)){$("eloErr").textContent=t("errElo");$(id).focus();return}opt[f]=raw?v:null}
   let k=$("kSelect").value;k=k==="other"?Number(String($("kOtherInput").value).replace(",",".")):Number(k);
   if(!(k>0)){$("eloErr").textContent=t("errK");return}
-  player={name:$("nameInput").value.trim().replace(/\s+/g," ").slice(0,60),fide,nat,k,natSys:$("natSysSel").value};store.set("arpad.player",JSON.stringify(player));toggleElo(false);renderHome();$("toast").textContent=t("saved");
+  player={name:$("nameInput").value.trim().replace(/\s+/g," ").slice(0,60),fide,nat,...opt,k,natSys:$("natSysSel").value};store.set("arpad.player",JSON.stringify(player));show("Home");renderHome();$("toast").textContent=t("saved");
 });
 
 /* tournaments */
 $("openTour").addEventListener("click",()=>{show("List");renderList()});
 function toggleAdd(open){$("addPanel").hidden=!open;$("openAdd").setAttribute("aria-expanded",open);$("addErr").textContent="";
-  if(open){["tName","tRounds","tPlace","tStart","tEnd","tValid","tMin","tInc"].forEach(i=>$(i).value="");tcHint("t");$("tMy").value=defMy("");$("tMy").dataset.touched="";$("tMyNat").value="";$("tKNat").value=String(defKNat());myFields("t");setK("t",player&&player.k);$("tName").focus()}}
-const defMy=valid=>player?((valid==="nat"?player.nat:player.fide)||player.fide||player.nat||""):"";
-$("tMy").addEventListener("input",()=>{$("tMy").dataset.touched="1"});
+  if(open){["tName","tRounds","tPlace","tStart","tEnd","tValid","tMin","tInc"].forEach(i=>$(i).value="");tcHint("t");$("tMy").value=defMy("");$("tMy").dataset.touched="";$("tMyNat").value="";$("tMyNat").dataset.touched="";$("tKNat").value=String(defKNat());myFields("t");$("tK").disabled=false;delete $("tK").dataset.prev;setK("t",player&&player.k);kFastHint("t");$("tName").focus()}}
+const defMy=(valid,cls)=>{if(!player)return"";const f=curElo("fide",cls),n=curElo("nat",cls);return (valid==="nat"?n:valid==="none"?f||n:f)||""};
+const pxCls=px=>clsOfMin(Number($(px+"Min").value));
+function refillMy(){if(!$("tMy").dataset.touched)$("tMy").value=defMy($("tValid").value,pxCls("t"));
+  if($("tValid").value==="both"&&!$("tMyNat").dataset.touched)$("tMyNat").value=curElo("nat",pxCls("t"))||""}
+$("tMy").addEventListener("input",()=>{$("tMy").dataset.touched="1"});$("tMyNat").addEventListener("input",()=>{$("tMyNat").dataset.touched="1"});
 function defKNat(k){k=Number(k)||(player&&player.k)||20;return natSys()==="fce"&&k===10?20:k}
 function kNatHint(px){const mi=Number($(px+"Min").value),c=mi>0?classOfMin(mi):null,h=$(px+"KNatHint");
   const fce=natSys()==="fce",fast=fce&&(c==="rapid"||c==="blitz"),sel=$(px+"KNat");
@@ -1203,8 +1236,7 @@ function kNatHint(px){const mi=Number($(px+"Min").value),c=mi>0?classOfMin(mi):n
 function myFields(px){const both=$(px+"Valid").value==="both";$(px+"MyNatField").hidden=!both;$(px+"KNatField").hidden=!both;if(both)kNatHint(px);
   const v=$(px+"Valid").value;document.querySelector(`label[for="${px}My"]`).textContent=t(v==="fide"||v==="both"?"tMyFide":v==="nat"?"tMyNat":"tMy");
   $(px+"My").closest(".field").hidden=!v;const h=$(px+"ValidHint");h.hidden=v!=="none";h.textContent=t("friendlyWarn")}
-$("tValid").addEventListener("change",()=>{if(!$("tMy").dataset.touched)$("tMy").value=defMy($("tValid").value);
-  if($("tValid").value==="both"&&!$("tMyNat").value&&player&&player.nat)$("tMyNat").value=player.nat;myFields("t")});
+$("tValid").addEventListener("change",()=>{refillMy();myFields("t");kFastHint("t")});
 // editing a tournament: each Elo stays with its own list when the validity changes
 let mElo={fide:"",nat:""};
 function mStash(v){const a=$("mMy").value.trim(),b=$("mMyNat").value.trim();
@@ -1220,7 +1252,12 @@ function setK(px,k){const sel=$(px+"K");
 function readK(px){const v=$(px+"K").value;if(!v)return null;
   const k=v==="other"?Number(String($(px+"KOther").value).replace(",",".")):Number(v);return k>0?k:null}
 ["t","m"].forEach(px=>$(px+"K").addEventListener("change",()=>{const v=$(px+"K").value;if(v&&v!=="other"&&px==="t")$("tKNat").value=String(defKNat(v))}));
-["t","m"].forEach(px=>$(px+"Min").addEventListener("input",()=>{if(!$(px+"KNatField").hidden)kNatHint(px)}));
+["t","m"].forEach(px=>$(px+"Min").addEventListener("input",()=>{if(!$(px+"KNatField").hidden)kNatHint(px);kFastHint(px);if(px==="t")refillMy()}));
+// rapid & blitz: K is always 20, so the K selector is locked
+function kFastHint(px){const mi=Number($(px+"Min").value),c=mi>0?classOfMin(mi):null,fast=c==="rapid"||c==="blitz",sel=$(px+"K"),h=$(px+"KHint");
+  if(fast){if(!sel.disabled){sel.dataset.prev=sel.value;sel.value="20";sel.disabled=true;$(px+"KOtherField").hidden=true}}
+  else if(sel.disabled){sel.disabled=false;sel.value=sel.dataset.prev||"";delete sel.dataset.prev;$(px+"KOtherField").hidden=sel.value!=="other"}
+  h.textContent=fast?t("kFast"):"";h.hidden=!fast}
 ["t","m"].forEach(px=>$(px+"K").addEventListener("change",()=>{$(px+"KOtherField").hidden=$(px+"K").value!=="other";if($(px+"K").value==="other")$(px+"KOther").focus()}));
 function readTc(px){const rm=$(px+"Min").value.trim(),ri=$(px+"Inc").value.trim();
   if(!/^\d+$/.test(rm)||!/^\d+$/.test(ri))return null;const mi=Number(rm),inc=Number(ri);
@@ -1294,9 +1331,10 @@ function offerUpdate(tr){
   if(tr.valid==="none")return;
   const cur=player||{},next={},rows=[];
   const fide=tr.valid==="fide"||tr.valid==="both"?tr.myElo:null,nat=tr.valid==="nat"?tr.myElo:tr.valid==="both"?tr.myEloNat:null;
-  if(fide&&fide!==cur.fide){next.fide=fide;rows.push(t("statusFide")+": "+(cur.fide||"—")+" → "+fide)}
-  if(nat&&nat!==cur.nat){next.nat=nat;rows.push(t("statusNat")+": "+(cur.nat||"—")+" → "+nat)}
-  if(tr.k&&tr.k!==cur.k){next.k=tr.k;rows.push("K: "+(cur.k||"—")+" → "+tr.k)}
+  const cls=CLS(tr),ff=eloField("fide",cls),nf=eloField("nat",cls),sfx=f=>f==="fide"||f==="nat"?"":" · "+T[lang].modes[f==="fideB"?"blitz":"rapid"];
+  if(fide&&fide!==cur[ff]){next[ff]=fide;rows.push(t("statusFide")+sfx(ff)+": "+(cur[ff]||"—")+" → "+fide)}
+  if(nat&&nat!==cur[nf]){next[nf]=nat;rows.push(t("statusNat")+sfx(nf)+": "+(cur[nf]||"—")+" → "+nat)}
+  if(cls==="classic"&&tr.k&&tr.k!==cur.k){next.k=tr.k;rows.push("K: "+(cur.k||"—")+" → "+tr.k)}
   if(!rows.length)return;
   pendingUpd=next;$("updText").textContent=t("updQ");
   const ul=$("updList");ul.replaceChildren();rows.forEach(r=>{const li=document.createElement("li");li.textContent=r;ul.append(li)});
@@ -1310,7 +1348,7 @@ function toggleMod(open){
   $("modPanel").hidden=!open;$("modAsk").hidden=open;$("modAsk").setAttribute("aria-expanded",open);$("modErr").textContent="";
   if(open){const tr=current;
     $("mName").value=tr.name;$("mRounds").value=tr.rounds.length;$("mPlace").value=tr.place||"";
-    $("mStart").value=tr.start||"";$("mEnd").value=tr.end||"";$("mValid").value=tr.valid||"";$("mMy").value=tr.myElo||"";$("mMyNat").value=tr.myEloNat||(tr.valid==="both"&&player&&player.nat)||"";$("mKNat").value=String(tr.kNat||defKNat(tr.k));mElo={fide:(tr.valid==="nat"?"":String(tr.myElo||""))||String((tr.eloMemo&&tr.eloMemo.fide)||""),nat:String((tr.valid==="nat"?tr.myElo:tr.myEloNat)||(tr.eloMemo&&tr.eloMemo.nat)||"")};$("mValid").dataset.prev=tr.valid||"";myFields("m");$("mMin").value=tr.tc?tr.tc.min:"";$("mInc").value=tr.tc?tr.tc.inc:"";tcHint("m");setK("m",tr.k||(player&&player.k));$("mName").focus()}
+    $("mStart").value=tr.start||"";$("mEnd").value=tr.end||"";$("mValid").value=tr.valid||"";$("mMy").value=tr.myElo||"";$("mMyNat").value=tr.myEloNat||(tr.valid==="both"&&curElo("nat",CLS(tr)))||"";$("mKNat").value=String(tr.kNat||defKNat(tr.k));mElo={fide:(tr.valid==="nat"?"":String(tr.myElo||""))||String((tr.eloMemo&&tr.eloMemo.fide)||""),nat:String((tr.valid==="nat"?tr.myElo:tr.myEloNat)||(tr.eloMemo&&tr.eloMemo.nat)||"")};$("mValid").dataset.prev=tr.valid||"";myFields("m");$("mMin").value=tr.tc?tr.tc.min:"";$("mInc").value=tr.tc?tr.tc.inc:"";tcHint("m");setK("m",tr.k||(player&&player.k));$("mK").disabled=false;delete $("mK").dataset.prev;kFastHint("m");$("mName").focus()}
 }
 $("modAsk").addEventListener("click",()=>toggleMod(true));
 $("modCancel").addEventListener("click",()=>toggleMod(false));
@@ -1347,7 +1385,7 @@ function renderEditor(){
     const ball=document.createElement("span");ball.className="ball";ball.textContent=i+1;
     [["w","W","colW"],["b","B","colB"]].forEach(([c,lbl,full])=>{
       const b=document.createElement("button");b.type="button";b.className=c;b.textContent=t(lbl);b.title=t(full);b.setAttribute("aria-label",t(full));
-      b.addEventListener("click",()=>{r.color=r.color===c?"":c;markDirty();paintColor(col,ball,r.res==="--"?"":r.color);paintRes(sel,r,col);renderPerf()});col.append(b);
+      b.addEventListener("click",()=>{r.color=r.color===c?"":c;delete r.ffk;markDirty();paintColor(col,ball,r.res==="--"?"":r.color);paintRes(sel,r,col);renderPerf()});col.append(b);
     });
     paintColor(col,ball,r.color);
     let sel;
@@ -1359,7 +1397,7 @@ function renderEditor(){
     sel.value=r.res;paintRes(sel,r,col);
     const bye=document.createElement("span");bye.className="byetag";bye.textContent="BYE";
     const paintBye=()=>{const on=r.res==="--";row.classList.toggle("bye",on);paintColor(col,ball,on?"":r.color)};
-    sel.addEventListener("change",()=>{r.res=sel.value;markDirty();paintRes(sel,r,col);paintBye();renderPerf()});
+    sel.addEventListener("change",()=>{r.res=sel.value;delete r.ffk;markDirty();paintRes(sel,r,col);paintBye();renderPerf()});
     const dl=document.createElement("span");dl.className="rdelta";deltaEls[i]=dl;
     row.append(col,ball,opp,bye,sel,dl);list.append(row);paintBye();
   });
@@ -1382,6 +1420,12 @@ function paintDeltas(){const tr=current;if(!tr)return;let tot=0,any=false,totN=0
     if(d!=null){tot+=d;any=true}if(dn!=null){totN+=dn;anyN=true}
     if(!el)return;el.replaceChildren();
     const v=d!=null?d:dn;   // FIDE + national tournament: a forfeit only counts for the national list
+    if(ffEditable(tr,r)){const sg=myScore(r)===1?1:-1;let sl=el.querySelector("select");
+      if(!sl||sl.dataset.sg!==String(sg)){el.replaceChildren();sl=document.createElement("select");sl.dataset.sg=String(sg);sl.setAttribute("aria-label",t("ffKLbl")+" R"+(i+1));
+        [20,40].forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=(sg>0?"+":"−")+k/4;sl.append(o)});
+        sl.addEventListener("change",()=>{r.ffk=Number(sl.value);markDirty();renderPerf()});el.append(sl);
+        if(d==null){const tag=document.createElement("small");tag.className="rtag";tag.textContent=t("natTag");el.append(tag)}}
+      sl.value=String(ffK(tr,r,"nat"));sl.title=t(sg>0?"ffKMine":"ffKRival");el.className="rdelta ff"+(sg>0?" pos":" neg");return}
     if(v==null){el.textContent=r.res&&r.res!=="--"&&tr.valid!=="none"?"–":"";el.className="rdelta none";return}
     const rr=Math.round(v*10)/10;el.className="rdelta"+(rr>0?" pos":rr<0?" neg":"");el.append(fmtD(v));
     if(d==null&&dn!=null){const tag=document.createElement("small");tag.className="rtag";tag.textContent=t("natTag");el.append(tag)}});
@@ -1407,8 +1451,8 @@ function renderPerf(){
   {const as=$("eAvgSub"),me=current.myElo;as.className="delta";
    as.textContent=s.avg!=null&&me?T[lang].avgVs(Math.round(s.avg-me)):""}
   const d=$("eDelta");
-  const useNat=current.valid==="nat"||(current.valid==="none"&&player&&!player.fide);
-  const ref=current.myElo||(player&&(useNat?player.nat:player.fide));
+  const useNat=current.valid==="nat"||(current.valid==="none"&&!curElo("fide",CLS(current)));
+  const ref=current.myElo||curElo(useNat?"nat":"fide",CLS(current));
   if(s.perf!=null&&ref){const diff=s.perf-ref;d.textContent=T[lang][current.myElo?"vsTour":useNat?"vsNat":"vsFide"](diff);d.className="delta "+(diff>0?"up":diff<0?"down":"")}
   else{d.textContent="";d.className="delta"}
   paintDeltas();syncMini();
@@ -1427,6 +1471,11 @@ const chrono=(a,b)=>(a.start||a.created).localeCompare(b.start||b.created);
 const CAT_ORDER=["muySup","sup","sim","inf","muyInf"];
 function catOf(diff){return diff>200?"muySup":diff>100?"sup":diff>=-100?"sim":diff>=-200?"inf":"muyInf"}
 function classOfMin(m){return m>=30?"classic":m>=10?"rapid":m>=3?"blitz":"bullet"}
+// rating list per time control: FIDE has classic/rapid/blitz; the national list only classic and rapid (blitz uses rapid)
+const clsOfMin=mi=>{const c=mi>0?classOfMin(mi):null;return c==="rapid"?"rapid":c==="blitz"||c==="bullet"?"blitz":"classic"};
+const CLS=tr=>clsOfMin(tr.tc&&Number(tr.tc.min));
+const eloField=(list,cls)=>list==="fide"?(cls==="rapid"?"fideR":cls==="blitz"?"fideB":"fide"):(cls==="classic"?"nat":"natR");
+const curElo=(list,cls)=>player&&player[eloField(list,cls||"classic")]||null;
 function tcClass(tr){const m=tr.tc&&Number(tr.tc.min);return m>0?classOfMin(m):null}
 function tcLabel(tr){const c=tcClass(tr);return c?tr.tc.min+"+"+tr.tc.inc+" · "+T[lang].modes[c]:""}
 let statMode="all";{const v=store.get("arpad.mode");if(["all","classic","rapid","blitz"].includes(v))statMode=v}
@@ -1446,13 +1495,18 @@ function expList(my,opp,list){const d=Math.round(my-opp);let ad=Math.abs(d);if(!
 const expScore=(my,opp)=>expList(my,opp,"fide");
 const listOf=tr=>tr.valid==="nat"?"nat":"fide";
 function baseFor(tr,list){if(tr.valid==="none")return null;if(list==="nat")return tr.valid==="nat"?tr.myElo:tr.valid==="both"?tr.myEloNat:null;return tr.valid==="nat"?null:tr.myElo}
-function kFor(tr,list){const k=tr.k||(player&&player.k)||20;if(list!=="nat")return k;
-  if(fceRules(list)){const c=tcClass(tr);if(c==="rapid"||c==="blitz")return 20}
+function kFor(tr,list){const k=tr.k||(player&&player.k)||20;{const c=tcClass(tr);if(c==="rapid"||c==="blitz")return 20}   // FIDE & FCE: rapid/blitz always K20
+  if(list!=="nat")return k;
   if(tr.valid==="nat")return k;return tr.kNat||(natSys()==="fce"&&k===10?20:k)}
 // Elo change of one game for one list (null = not rated)
+// K of the player who showed up in an FCE forfeit: editable (20/40) except in rapid/blitz, where it is always 20.
+// Default: mine if I won by forfeit, K20 for the rival if I didn't show up.
+const ffFixed=tr=>{const c=tcClass(tr);return c==="rapid"||c==="blitz"};
+function ffK(tr,r,list){if(ffFixed(tr))return 20;if(r.ffk===20||r.ffk===40)return r.ffk;return myScore(r)===1?kFor(tr,list):20}
+function ffEditable(tr,r){return (r.res==="+-"||r.res==="-+")&&!ffFixed(tr)&&gameDelta(tr,r,"nat")!=null}
 function gameDelta(tr,r,list){list=list||listOf(tr);const base=baseFor(tr,list);if(!base)return null;
   const s=myScore(r);if(s==null)return null;const K=kFor(tr,list);
-  if(fceRules(list)&&(r.res==="+-"||r.res==="-+"))return (K/2)*(s-.5);   // FCE art. 33: forfeit win vs equal rating, half K
+  if(fceRules(list)&&(r.res==="+-"||r.res==="-+"))return (s===1?1:-1)*ffK(tr,r,list)/4;   // FCE art. 33: forfeit = K/4 of whoever showed up
   const opp=Number(r.opp);if(!OTB[r.res]||!(opp>0))return null;return K*(s-expList(base,opp,list))}
 function perfOf(gs){if(!gs.length)return null;const avg=gs.reduce((a,g)=>a+g.opp,0)/gs.length,p=gs.reduce((a,g)=>a+g.s,0)/gs.length;return Math.round(avg+dp(p))}
 function eloGain(tr,list){list=list||listOf(tr);if(!baseFor(tr,list))return null;let sum=0,n=0;
@@ -1521,12 +1575,26 @@ function legend(items){const r=mk("div","lgrow");items.forEach(([svg,txt])=>{con
 const LG_LINE=(c,dash)=>`<svg width="22" height="10" aria-hidden="true"><line x1="1" y1="5" x2="21" y2="5" stroke="var(--${c})" stroke-width="${dash?2:2.5}"${dash?' stroke-dasharray="4 3"':""}/>${dash?"":`<circle cx="11" cy="5" r="3.5" fill="var(--${c})"/>`}</svg>`;
 const LG_DOT=c=>`<svg width="12" height="10" aria-hidden="true"><circle cx="6" cy="5" r="3.5" fill="var(--${c})"/></svg>`;
 const LG_BARS='<svg width="14" height="12" aria-hidden="true"><rect x="1" y="1" width="5" height="10" rx="1.5" fill="var(--good)"/><rect x="8" y="5" width="5" height="6" rx="1.5" fill="var(--bad)"/></svg>';
-function chartCard(title,lg){const c=mk("section","card"),h=mk("div","chead");h.append(mk("h3",null,title));if(lg)h.append(lg);
+function chartCard(title,lg){const c=mk("section","card"),h=mk("div","chead");if(statMode==="rapid"||statMode==="blitz")c.style.setProperty("--accent","var(--"+statMode+")");   // rapid/blitz charts keep the colour they have under "All"
+  h.append(mk("h3",null,title));if(lg)h.append(lg);
   const ch=mk("div","chart"),inf=mk("p","cinfo");inf.setAttribute("aria-live","polite");c.append(h,ch,inf);return{card:c,box:ch,info:inf}}
 const dLabel=tr=>{const dt=tr.start||tr.end;return dt?dt.slice(5,7)+"/"+dt.slice(2,4):"·"};
 function infoHead(info,tr){info.replaceChildren();info.append(mk("strong",null,tr.name),document.createElement("br"));const dl=dateRange(tr);if(dl)info.append(dl+" · ")}
 
 /* generic line chart: one y-scale, several series sharing it */
+// Elo curve with every time control: each one is its own rating list, so each gets its own line
+const MODE_C={classic:"accent",rapid:"rapid",blitz:"blitz"};
+function curveAll(body,items){const L=T[lang];
+  items.forEach(it=>{it.m=CLS(it.tr);if(curveList==="nat"&&it.m==="blitz")it.m="rapid";it["a_"+it.m]=it.a});   // national: blitz is rated on the rapid list
+  const ms=["classic","rapid","blitz"].filter(m=>items.some(it=>it.m===m));
+  body.append(tiles(ms.map(m=>{const xs=items.filter(it=>it.m===m),l=xs[xs.length-1],now=Math.round(l.b??l.a),ch=now-xs[0].a;
+    return[L.modes[m]+" · "+fmtSigned(ch),now,ch>0?"pos":ch<0?"neg":""]})));
+  const c=chartCard(L.sec.curve[0]+" · "+t(curveList==="fide"?"vFide":"vNat"),legend(ms.map(m=>[LG_LINE(MODE_C[m]),L.modes[m]])));
+  body.append(c.card,mk("p","legend",t("curveNoteAll")));
+  lineChart(c.box,c.info,items,ms.map((m,i)=>({key:"a_"+m,c:MODE_C[m],line:1,dots:1,r:3.5,label:i===0?1:0})),(it,info)=>{
+    infoHead(info,it.tr);info.append(L.modes[it.m]+" · "+t("startW")+" ",mk("b",null,String(it.a)));
+    if(it.b!=null)info.append(" → "+t("endW")+" ",mk("b",null,String(Math.round(it.b)))," ("+fmtGain(it.g.d)+")")});
+}
 function lineChart(box,info,items,series,infoFn){
   box.replaceChildren();
   const W=Math.max(280,box.clientWidth||340),H=230,m={l:42,r:18,t:18,b:26};
@@ -1614,6 +1682,7 @@ const RENDER={
     const baseOf=tr=>curveList==="fide"?(tr.valid==="fide"||tr.valid==="both"?tr.myElo:null):(tr.valid==="nat"?tr.myElo:tr.valid==="both"?tr.myEloNat:null);
     const items=[...statList].filter(tr=>baseOf(tr)).sort(chrono).map(tr=>{const a=baseOf(tr),g=eloGain(tr,curveList);return{tr,a,b:g?a+g.d:null,g}});
     if(!items.length){body.append(mk("div","empty-state",t("noCurve")));return}
+    if(statMode==="all"){curveAll(body,items);return}
     const lastI=items[items.length-1],now=Math.round(lastI.b??lastI.a),first=items[0].a;
     const peak=Math.round(Math.max(...items.flatMap(i=>[i.a,i.b]).filter(v=>v!=null)));
     const ch=now-first;
@@ -1706,7 +1775,7 @@ const RENDER={
     body.append(list);
   },
   curious(body,games){
-    const L=T[lang],list=mk("div","recs tiles"),fmtInt=v=>Math.round(v).toLocaleString(L.locale);
+    const L=T[lang],list=mk("div","recs cutiles"),fmtInt=v=>Math.round(v).toLocaleString(L.locale);
     // detail is always visible; extra only once the tile is expanded
     const card=(ic,title,val,detail,extra)=>{const c=mk("div","rec"),i=mk("span","sic");i.innerHTML=icon(ic);const tx=mk("div","rtx");
       tx.append(mk("span","lbl",title),mk("span","rv",val));if(detail){const d=mk("span","rd",detail);if(extra)d.append(mk("span","rx",extra));tx.append(d)}c.append(i,tx);list.append(c);return tx};
@@ -1787,7 +1856,7 @@ function seedDemo(){
   D.forEach(([name,place,n,valid,mi,inc],k)=>{
     const st=new Date(d0.getTime()+k*48*864e5+Math.floor(rnd()*10)*864e5),days=mi>=30?Math.min(n,8):mi>=10?1:0,en=new Date(st.getTime()+days*864e5);
     const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-    const my=Math.round(1660+k*11+(rnd()*2-1)*25),nat=my+28+Math.round(rnd()*30);
+    const cl=clsOfMin(mi),my=Math.round(1660+k*11+(cl==="rapid"?-70:cl==="blitz"?-130:0)+(rnd()*2-1)*25),nat=my+28+Math.round(rnd()*30);
     let c=rnd()<.5?"w":"b";
     const rounds=Array.from({length:n},(_,i)=>{
       const color=c;c=c==="w"?"b":"w";
@@ -1809,7 +1878,7 @@ $("demoBtn").addEventListener("click",()=>{if(hasDemo()){tours=tours.filter(x=>!
 $("clearDemo").addEventListener("click",()=>{tours=tours.filter(x=>!x.demo);saveTours();renderList()});
 
 /* ---------- about / feedback / donate ---------- */
-const CONFIG={version:"1.2",formKey:"6b7143c0-ee47-4d96-a039-fd96e847fcd7",paypal:"https://paypal.me/arpadelocalc"};   // formKey: Web3Forms access key (messages reach the mailbox without exposing it)
+const CONFIG={version:"1.3",formKey:"6b7143c0-ee47-4d96-a039-fd96e847fcd7",paypal:"https://paypal.me/arpadelocalc"};   // formKey: Web3Forms access key (messages reach the mailbox without exposing it)
 function openInfo(v){show(v);
   if(v==="Backup")renderBackup();
   if(v==="About")$("aboutVer").textContent=t("version")+" "+CONFIG.version;
@@ -1892,9 +1961,10 @@ async function makeCard(tr,theme){
   y+=Math.ceil(n/perRow)*(rad*2+70)+30;
   // detail lines
   g.font=`500 30px ${F.body}`;g.fillStyle=C.mut;const lines=[];
-  if(s.avg!=null)lines.push(T[lang].cardAvg+" "+Math.round(s.avg)+(tr.k?"  ·  K"+tr.k:""));
+  if(s.avg!=null)lines.push(T[lang].cardAvg+" "+Math.round(s.avg)+(tr.k||CLS(tr)!=="classic"?"  ·  K"+kFor(tr,listOf(tr)):""));
   const listF=tr.valid==="fide"||tr.valid==="both",listN=tr.valid==="nat";
-  const ev=[];if(gF&&tr.myElo)ev.push((listN?T[lang].statusNat:T[lang].statusFide)+" "+tr.myElo+" → "+Math.round(tr.myElo+gF.d));
+  const mSfx=CLS(tr)==="classic"?"":" "+T[lang].modes[CLS(tr)].toLowerCase();
+  const ev=[];if(gF&&tr.myElo)ev.push((listN?T[lang].statusNat:T[lang].statusFide)+mSfx+" "+tr.myElo+" → "+Math.round(tr.myElo+gF.d));
   if(gN)ev.push(T[lang].statusNat.replace(/^Elo\s*/,"")+" "+tr.myEloNat+" → "+Math.round(tr.myEloNat+gN.d));
   if(ev.length)lines.push(ev.join("  ·  ")+" ("+T[lang].cardEst+")");
   lines.forEach(l=>{g.fillText(l,P,y);y+=44});
@@ -1955,13 +2025,13 @@ function cleanTour(x){
     name:str(x.name,80).trim()||"—",place:str(x.place,80),start:date(x.start),end:date(x.end),
     valid:VALID_OK.has(x.valid)?x.valid:"",myElo:isNum(x.myElo)?Math.round(x.myElo):null,myEloNat:isNum(x.myEloNat)?Math.round(x.myEloNat):null,
     k:isNum(x.k)&&x.k>0?x.k:null,kNat:isNum(x.kNat)&&x.kNat>0?x.kNat:null,created:typeof x.created==="string"?x.created.slice(0,40):new Date().toISOString(),
-    rounds:x.rounds.map(r=>({color:r&&(r.color==="w"||r.color==="b")?r.color:"",opp:r&&/^\d{0,4}$/.test(String(r.opp??""))?String(r.opp??""):"",res:r&&RES_OK.has(r.res)?r.res:""}))};
+    rounds:x.rounds.map(r=>({color:r&&(r.color==="w"||r.color==="b")?r.color:"",opp:r&&/^\d{0,4}$/.test(String(r.opp??""))?String(r.opp??""):"",res:r&&RES_OK.has(r.res)?r.res:"",...(r&&(r.ffk===20||r.ffk===40)?{ffk:r.ffk}:{})}))};
   if(x.tc&&Number.isInteger(x.tc.min)&&Number.isInteger(x.tc.inc))tr.tc={min:x.tc.min,inc:x.tc.inc};
   if(x.demo===true)tr.demo=true;return tr}
 function parseBackup(text){let o;try{o=JSON.parse(text)}catch(e){return null}
   if(!o||o.app!=="arpad"||!Array.isArray(o.tours))return null;
   const ts=o.tours.map(cleanTour).filter(Boolean);
-  let p=null;const q=o.player;if(q&&typeof q==="object")p={name:typeof q.name==="string"?q.name.slice(0,60):"",fide:isNum(q.fide)?Math.round(q.fide):null,nat:isNum(q.nat)?Math.round(q.nat):null,k:isNum(q.k)&&q.k>0?q.k:null,natSys:q.natSys==="fide"?"fide":"fce"};
+  let p=null;const q=o.player;if(q&&typeof q==="object")p={name:typeof q.name==="string"?q.name.slice(0,60):"",fide:isNum(q.fide)?Math.round(q.fide):null,nat:isNum(q.nat)?Math.round(q.nat):null,fideR:isNum(q.fideR)?Math.round(q.fideR):null,fideB:isNum(q.fideB)?Math.round(q.fideB):null,natR:isNum(q.natR)?Math.round(q.natR):null,k:isNum(q.k)&&q.k>0?q.k:null,natSys:q.natSys==="fide"?"fide":"fce"};
   return{tours:ts,player:p,exported:typeof o.exported==="string"?o.exported:""}}
 let pendingImport=null;
 function renderBackup(){const last=store.get("arpad.lastBackup");
