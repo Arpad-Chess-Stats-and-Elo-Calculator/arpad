@@ -171,6 +171,7 @@ input.name{font-family:var(--body)}
 .rounds{display:flex;flex-direction:column;gap:8px}
 .rhead,.round{display:grid;grid-template-columns:92px 40px minmax(0,1fr) minmax(0,1.15fr) 52px;gap:10px;align-items:center}
 .rdelta{font:600 14px var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap;color:var(--ink)}
+.rtag{display:block;font:600 9px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .rdelta.pos{color:var(--good)} .rdelta.neg{color:var(--bad)} .rdelta.none{color:var(--muted)}
 .rhead span:last-child{text-align:right}
 .rhead{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 10px}
@@ -818,7 +819,7 @@ input,select,textarea{font-size:max(16px,1em)}
 
 <script>
 const T={
- es:{noByes:"sin contar byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs tu Elo",natSysL:"Elo Nacional calculado con",natSysFce:"Reglamento FCE (Catalunya)",natSysFide:"Reglas FIDE (FEDA y otras federaciones)",natSysHint:"La FCE no limita la diferencia a 400 puntos, solo usa K20 o K40 y en rápidas siempre K20.",kNatL:"Coeficiente K Nacional",kNatFceHint:"FCE: K40 para nuevos jugadores (menos de 30 partidas) y sub-18 por debajo de 2300; K20 en el resto.",kNatFast:"FCE: en rápidas y blitz el K es siempre 20.",avgShort:"Media riv.",evrHead:(a,up)=>"Has sumado "+a+(a==="1,0"?" punto ":" puntos ")+(up?"más":"menos")+" de lo esperado",evrEq:"Has sumado lo esperado",evrEqSub:"Juegas justo a tu nivel Elo.",
+ es:{natTag:"Nac.",noByes:"sin contar byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs tu Elo",natSysL:"Elo Nacional calculado con",natSysFce:"Reglamento FCE (Catalunya)",natSysFide:"Reglas FIDE (FEDA y otras federaciones)",natSysHint:"La FCE no limita la diferencia a 400 puntos, solo usa K20 o K40 y en rápidas siempre K20.",kNatL:"Coeficiente K Nacional",kNatFceHint:"FCE: K40 para nuevos jugadores (menos de 30 partidas) y sub-18 por debajo de 2300; K20 en el resto.",kNatFast:"FCE: en rápidas y blitz el K es siempre 20.",avgShort:"Media riv.",evrHead:(a,up)=>"Has sumado "+a+(a==="1,0"?" punto ":" puntos ")+(up?"más":"menos")+" de lo esperado",evrEq:"Has sumado lo esperado",evrEqSub:"Juegas justo a tu nivel Elo.",
   evrCmp:(a,up)=>{const n=Math.round(a*2)/2,ns=n.toLocaleString("es-ES");return a<0.75?"Es como unas tablas "+(up?"de más":"de menos"):a<1.25?"Es como "+(up?"una victoria de más":"una derrota de más"):"Es como si hubieras "+(up?"ganado ":"perdido ")+ns+" partidas de más"},
   evrOf:"puntos de",evrExp:"esperados",evrTitle:"Rendimiento frente a lo esperado",evrHelpT:"¿Qué es «lo esperado»?",evrHelpOk:"Entendido",
   evrHelp:["Según la diferencia de Elo, cada partida tiene una puntuación «lógica»: lo que sacarías de media si la jugaras muchas veces. Contra alguien de tu nivel es 0,5 puntos; contra alguien 200 puntos más fuerte, solo 0,24.","Arpad suma esas puntuaciones de todas tus partidas y las compara con los puntos que hiciste de verdad. Si haces más de lo esperado, juegas por encima de tu Elo y lo subes; si haces menos, lo bajas.","En la barra, la raya marca lo esperado y el relleno, lo que conseguiste."],
@@ -893,7 +894,7 @@ const T={
   legend:"Resultados en notación estándar (blancas primero): los puntos se calculan según tu color. Con menos de 3 partidas valoradas la performance lleva «?» porque aún es poco fiable. La performance usa la tabla FIDE (media de rivales + dp) y solo cuenta partidas jugadas con Elo del rival; las incomparecencias suman puntos pero no entran en la performance. «Bye» es una ronda sin partida (descanso pedido): cuenta 0 puntos y no entra en la performance.",
   vsElo:d=>(d>0?"+":"")+d+" vs tu Elo",delTour:"Eliminar torneo",delConfirm:"Se borrará el torneo con todas sus rondas. Esta acción no se puede deshacer.",delYes:"Eliminar",
   footer:"Llamada así por Arpad Elo (1903–1992), creador del sistema de puntuación.",locale:"es-ES"},
- ca:{noByes:"sense comptar byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs el teu Elo",natSysL:"Elo Nacional calculat amb",natSysFce:"Reglament FCE (Catalunya)",natSysFide:"Regles FIDE (FEDA i altres federacions)",natSysHint:"La FCE no limita la diferència a 400 punts, només fa servir K20 o K40 i en ràpides sempre K20.",kNatL:"Coeficient K Nacional",kNatFceHint:"FCE: K40 per a jugadors nous (menys de 30 partides) i sub-18 per sota de 2300; K20 a la resta.",kNatFast:"FCE: en ràpides i llampecs la K és sempre 20.",avgShort:"Mitj. riv.",evrHead:(a,up)=>"Has sumat "+a+(a==="1,0"?" punt ":" punts ")+(up?"més":"menys")+" del que s'esperava",evrEq:"Has sumat el que s'esperava",evrEqSub:"Jugues just al teu nivell Elo.",
+ ca:{natTag:"Nac.",noByes:"sense comptar byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs el teu Elo",natSysL:"Elo Nacional calculat amb",natSysFce:"Reglament FCE (Catalunya)",natSysFide:"Regles FIDE (FEDA i altres federacions)",natSysHint:"La FCE no limita la diferència a 400 punts, només fa servir K20 o K40 i en ràpides sempre K20.",kNatL:"Coeficient K Nacional",kNatFceHint:"FCE: K40 per a jugadors nous (menys de 30 partides) i sub-18 per sota de 2300; K20 a la resta.",kNatFast:"FCE: en ràpides i llampecs la K és sempre 20.",avgShort:"Mitj. riv.",evrHead:(a,up)=>"Has sumat "+a+(a==="1,0"?" punt ":" punts ")+(up?"més":"menys")+" del que s'esperava",evrEq:"Has sumat el que s'esperava",evrEqSub:"Jugues just al teu nivell Elo.",
   evrCmp:(a,up)=>{const n=Math.round(a*2)/2,ns=n.toLocaleString("ca-ES");return a<0.75?"És com unes taules "+(up?"de més":"de menys"):a<1.25?"És com "+(up?"una victòria de més":"una derrota de més"):"És com si haguessis "+(up?"guanyat ":"perdut ")+ns+" partides de més"},
   evrOf:"punts de",evrExp:"esperats",evrTitle:"Rendiment respecte a l'esperat",evrHelpT:"Què és «l'esperat»?",evrHelpOk:"Entesos",
   evrHelp:["Segons la diferència d'Elo, cada partida té una puntuació «lògica»: el que trauries de mitjana si la juguessis moltes vegades. Contra algú del teu nivell és 0,5 punts; contra algú 200 punts més fort, només 0,24.","Arpad suma aquestes puntuacions de totes les teves partides i les compara amb els punts que vas fer de veritat. Si en fas més dels esperats, jugues per sobre del teu Elo i el puges; si en fas menys, el baixes.","A la barra, la ratlla marca l'esperat i l'emplenat, el que vas aconseguir."],
@@ -968,7 +969,7 @@ const T={
   legend:"Resultats en notació estàndard (blanques primer): els punts es calculen segons el teu color. Amb menys de 3 partides valorades la performance porta «?» perquè encara és poc fiable. La performance fa servir la taula FIDE (mitjana de rivals + dp) i només compta partides jugades amb Elo del rival; les incompareixences sumen punts però no entren a la performance. «Bye» és una ronda sense partida (descans demanat): compta 0 punts i no entra a la performance.",
   vsElo:d=>(d>0?"+":"")+d+" vs el teu Elo",delTour:"Eliminar torneig",delConfirm:"S'esborrarà el torneig amb totes les rondes. Aquesta acció no es pot desfer.",delYes:"Eliminar",
   footer:"Anomenada així per Arpad Elo (1903–1992), creador del sistema de puntuació.",locale:"ca-ES"},
- en:{noByes:"excluding byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs your Elo",natSysL:"National Elo calculated with",natSysFce:"FCE rules (Catalonia)",natSysFide:"FIDE rules (FEDA and other federations)",natSysHint:"The FCE doesn't cap the difference at 400 points, only uses K20 or K40, and rapid is always K20.",kNatL:"National K-factor",kNatFceHint:"FCE: K40 for new players (fewer than 30 games) and under-18s below 2300; K20 otherwise.",kNatFast:"FCE: rapid and blitz always use K20.",avgShort:"Avg. opp.",evrHead:(a,up)=>"You scored "+a+(a==="1.0"?" point ":" points ")+(up?"more":"fewer")+" than expected",evrEq:"You scored as expected",evrEqSub:"You're playing right at your Elo level.",
+ en:{natTag:"Nat.",noByes:"excluding byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs your Elo",natSysL:"National Elo calculated with",natSysFce:"FCE rules (Catalonia)",natSysFide:"FIDE rules (FEDA and other federations)",natSysHint:"The FCE doesn't cap the difference at 400 points, only uses K20 or K40, and rapid is always K20.",kNatL:"National K-factor",kNatFceHint:"FCE: K40 for new players (fewer than 30 games) and under-18s below 2300; K20 otherwise.",kNatFast:"FCE: rapid and blitz always use K20.",avgShort:"Avg. opp.",evrHead:(a,up)=>"You scored "+a+(a==="1.0"?" point ":" points ")+(up?"more":"fewer")+" than expected",evrEq:"You scored as expected",evrEqSub:"You're playing right at your Elo level.",
   evrCmp:(a,up)=>{const n=Math.round(a*2)/2;return a<0.75?"That's like "+(up?"an extra draw":"one draw fewer"):a<1.25?"That's like "+(up?"an extra win":"an extra loss"):"That's as if you'd "+(up?"won ":"lost ")+n+" more games"},
   evrOf:"points out of",evrExp:"expected",evrTitle:"Performance vs expected",evrHelpT:"What does “expected” mean?",evrHelpOk:"Got it",
   evrHelp:["Based on the Elo difference, every game has a “logical” score: what you'd get on average if you played it many times. Against someone your level it's 0.5 points; against someone 200 points stronger, just 0.24.","Arpad adds up those scores across your games and compares them with the points you actually scored. Score more than expected and you're playing above your Elo, so it goes up; score less and it goes down.","On the bar, the line marks what was expected and the fill shows what you got."],
@@ -1190,7 +1191,13 @@ function myFields(px){const both=$(px+"Valid").value==="both";$(px+"MyNatField")
   $(px+"My").closest(".field").hidden=!v;const h=$(px+"ValidHint");h.hidden=v!=="none";h.textContent=t("friendlyWarn")}
 $("tValid").addEventListener("change",()=>{if(!$("tMy").dataset.touched)$("tMy").value=defMy($("tValid").value);
   if($("tValid").value==="both"&&!$("tMyNat").value&&player&&player.nat)$("tMyNat").value=player.nat;myFields("t")});
-$("mValid").addEventListener("change",()=>{if($("mValid").value==="both"&&!$("mMyNat").value&&player&&player.nat)$("mMyNat").value=player.nat;myFields("m")});
+// editing a tournament: each Elo stays with its own list when the validity changes
+let mElo={fide:"",nat:""};
+function mStash(v){const a=$("mMy").value.trim(),b=$("mMyNat").value.trim();
+  if(v==="fide")mElo.fide=a;else if(v==="nat")mElo.nat=a;else if(v==="both"){mElo.fide=a;mElo.nat=b}else if(v==="none"&&a&&!mElo.fide&&!mElo.nat)mElo.fide=a}
+function mFill(v){if(v==="fide")$("mMy").value=mElo.fide;else if(v==="nat")$("mMy").value=mElo.nat;
+  else if(v==="both"){$("mMy").value=mElo.fide;$("mMyNat").value=mElo.nat}else if(v==="none")$("mMy").value=mElo.fide||mElo.nat}
+$("mValid").addEventListener("change",()=>{const prev=$("mValid").dataset.prev||"",v=$("mValid").value;mStash(prev);mFill(v);$("mValid").dataset.prev=v;myFields("m")});
 function setK(px,k){const sel=$(px+"K");
   if(!k){sel.value="";$(px+"KOther").value=""}
   else if([10,20,40].includes(Number(k))){sel.value=String(k);$(px+"KOther").value=""}
@@ -1289,7 +1296,7 @@ function toggleMod(open){
   $("modPanel").hidden=!open;$("modAsk").hidden=open;$("modAsk").setAttribute("aria-expanded",open);$("modErr").textContent="";
   if(open){const tr=current;
     $("mName").value=tr.name;$("mRounds").value=tr.rounds.length;$("mPlace").value=tr.place||"";
-    $("mStart").value=tr.start||"";$("mEnd").value=tr.end||"";$("mValid").value=tr.valid||"";$("mMy").value=tr.myElo||"";$("mMyNat").value=tr.myEloNat||(tr.valid==="both"&&player&&player.nat)||"";$("mKNat").value=String(tr.kNat||defKNat(tr.k));myFields("m");$("mMin").value=tr.tc?tr.tc.min:"";$("mInc").value=tr.tc?tr.tc.inc:"";tcHint("m");setK("m",tr.k||(player&&player.k));$("mName").focus()}
+    $("mStart").value=tr.start||"";$("mEnd").value=tr.end||"";$("mValid").value=tr.valid||"";$("mMy").value=tr.myElo||"";$("mMyNat").value=tr.myEloNat||(tr.valid==="both"&&player&&player.nat)||"";$("mKNat").value=String(tr.kNat||defKNat(tr.k));mElo={fide:(tr.valid==="nat"?"":String(tr.myElo||""))||String((tr.eloMemo&&tr.eloMemo.fide)||""),nat:String((tr.valid==="nat"?tr.myElo:tr.myEloNat)||(tr.eloMemo&&tr.eloMemo.nat)||"")};$("mValid").dataset.prev=tr.valid||"";myFields("m");$("mMin").value=tr.tc?tr.tc.min:"";$("mInc").value=tr.tc?tr.tc.inc:"";tcHint("m");setK("m",tr.k||(player&&player.k));$("mName").focus()}
 }
 $("modAsk").addEventListener("click",()=>toggleMod(true));
 $("modCancel").addEventListener("click",()=>toggleMod(false));
@@ -1313,7 +1320,7 @@ $("modPanel").addEventListener("submit",ev=>{ev.preventDefault();
   if(n<tr.rounds.length&&tr.rounds.slice(n).some(r=>r.color||r.opp||r.res)){err(T[lang].errShrink(n));return}
   if(n>tr.rounds.length)for(let i=tr.rounds.length;i<n;i++)tr.rounds.push({color:"",opp:"",res:""});
   else tr.rounds.length=n;
-  Object.assign(tr,{name,place:$("mPlace").value.trim(),start,end,valid,myElo,myEloNat,k:kVal,kNat:valid==="both"?Number($("mKNat").value):null,tc});
+  mStash(valid);Object.assign(tr,{eloMemo:{fide:mElo.fide,nat:mElo.nat},name,place:$("mPlace").value.trim(),start,end,valid,myElo,myEloNat,k:kVal,kNat:valid==="both"?Number($("mKNat").value):null,tc});
   commitEdits();toggleMod(false);renderEditor();
 });
 function renderEditor(){
@@ -1356,17 +1363,20 @@ function paintRes(sel,r,col){
 let deltaEls=[];
 const fmtD=v=>{const r=Math.round(v*10)/10,a=Math.abs(r).toLocaleString(T[lang].locale,{minimumFractionDigits:1,maximumFractionDigits:1});return r>0?"+"+a:r<0?"−"+a:a};
 
-function paintDeltas(){const tr=current;if(!tr)return;let tot=0,any=false,totN=0,anyN=false;
-  tr.rounds.forEach((r,i)=>{const el=deltaEls[i];const d=gameDelta(tr,r);
-    if(tr.valid==="both"&&tr.myEloNat){const dn=gameDelta(tr,r,"nat");if(dn!=null){totN+=dn;anyN=true}}
-    if(!el)return;
-    if(d==null){el.textContent=r.res&&r.res!=="--"&&tr.valid!=="none"?"–":"";el.className="rdelta none";return}
-    tot+=d;any=true;const rr=Math.round(d*10)/10;el.textContent=fmtD(d);el.className="rdelta"+(rr>0?" pos":rr<0?" neg":"")});
-  const e=$("eElo"),sub=$("eEloSub");
+function paintDeltas(){const tr=current;if(!tr)return;let tot=0,any=false,totN=0,anyN=false;const both=tr.valid==="both"&&tr.myEloNat;
+  tr.rounds.forEach((r,i)=>{const el=deltaEls[i];const d=gameDelta(tr,r),dn=both?gameDelta(tr,r,"nat"):null;
+    if(d!=null){tot+=d;any=true}if(dn!=null){totN+=dn;anyN=true}
+    if(!el)return;el.replaceChildren();
+    const v=d!=null?d:dn;   // FIDE + national tournament: a forfeit only counts for the national list
+    if(v==null){el.textContent=r.res&&r.res!=="--"&&tr.valid!=="none"?"–":"";el.className="rdelta none";return}
+    const rr=Math.round(v*10)/10;el.className="rdelta"+(rr>0?" pos":rr<0?" neg":"");el.append(fmtD(v));
+    if(d==null&&dn!=null){const tag=document.createElement("small");tag.className="rtag";tag.textContent=t("natTag");el.append(tag)}});
+  const e=$("eElo"),sub=$("eEloSub");sub.className="delta";
   if(tr.valid==="none"){e.textContent=t("vChip").none;e.className="mid";sub.textContent="";return}
-  if(!any){e.textContent="—";e.className="mid";sub.textContent="";return}
-  const rt=Math.round(tot*10)/10;e.textContent=fmtD(tot);e.className="mid"+(rt>0?" pos":rt<0?" neg":"");
-  sub.className="delta";sub.textContent=tr.valid==="both"&&anyN?t("statusNat")+" "+fmtD(totN):tr.valid==="nat"?t("statusNat"):tr.valid==="fide"||tr.valid==="both"?"FIDE":""}
+  if(any){const rt=Math.round(tot*10)/10;e.textContent=fmtD(tot);e.className="mid"+(rt>0?" pos":rt<0?" neg":"")}
+  else if(!both||!anyN){e.textContent="—";e.className="mid";sub.textContent="";return}
+  else{e.textContent=fmtD(0);e.className="mid"}
+  sub.textContent=both&&anyN?t("statusNat")+" "+fmtD(totN):tr.valid==="nat"?t("statusNat"):"FIDE"}
 function syncMini(){if(!current)return;$("mName").textContent=current.name;
   [["ePerf","mPerf"],["ePts","mPts"],["eAvg","mAvg"],["eElo","mElo"]].forEach(([a,b])=>{const A=$(a),B=$(b);B.textContent=A.textContent;B.className=A.classList.contains("pos")?"pos":A.classList.contains("neg")?"neg":""})}
 function edScroll(){const m=$("edMini");if($("vEdit").hidden){m.classList.remove("on");m.setAttribute("aria-hidden","true");return}
