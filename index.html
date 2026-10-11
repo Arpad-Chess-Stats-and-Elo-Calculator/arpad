@@ -257,6 +257,20 @@ input.name{font-family:var(--body)}
 .sbar span{display:block;height:8px;border-radius:3px;background:var(--accent);min-width:2px}
 .sbar em{font-style:normal;min-width:3.2em}
 .recs{display:flex;flex-direction:column;gap:10px}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:620px){.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.tiles .rec{flex-direction:column;gap:10px;aspect-ratio:1;padding:14px;cursor:pointer;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.tiles .rec:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tiles .rec::after{content:"+";position:absolute;top:10px;right:13px;font:500 18px/1 var(--mono);color:var(--muted)}
+.tiles .rec.open{grid-column:1/-1;aspect-ratio:auto;flex-direction:row;gap:14px;padding:14px 16px}
+.tiles .rec.open::after{content:"−"}
+.tiles .rec .lbl{white-space:normal;font-size:11px;letter-spacing:.06em;line-height:1.35;padding-right:12px}
+.tiles .rec .rv{font-size:28px}
+.tiles .rec:not(.open) .rtx>.rd{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;line-height:1.4}
+.tiles .rec:not(.open) .rx,.tiles .rec:not(.open) .minilist,.tiles .rec:not(.open) .rrow .rd{display:none}
+.tiles .rec:not(.open) .rrow{margin-top:2px}
+.tiles .rec:not(.open) .rrow .lbl{min-width:0}
+.tiles .rec:not(.open) .rrow .rv{font-size:20px}
 .rec{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
 .rtx{display:flex;flex-direction:column;min-width:0}
 .rv{font:600 24px/1.25 var(--mono);font-variant-numeric:tabular-nums}
@@ -871,7 +885,7 @@ const T={
   noData:"No hay partidas valoradas con este filtro.",
   sec:{curious:["Curiosidades","Datos curiosos de tus partidas"],perf:["Performance","Últimos 10 torneos y Elo ganado"],curve:["Curva de Elo","Tu Elo a lo largo del tiempo"],trend:["Tendencia","Media móvil de 5 torneos"],
     level:["Nivel del rival","Resultados y esperado frente a real"],color:["Blancas y negras","Rendimiento por color"],rounds:["Por ronda","Cómo rindes según la ronda"],records:["Récords","Tus mejores marcas"]},
-  expected:"Esperado",real:"Real",cuDef:"Elo derrotado",cuDefD:(n,a)=>"Suma del Elo de los rivales a los que has ganado, en "+(n===1?"1 victoria":n+" victorias")+" · rival medio vencido: "+a,cuSur:"Sorpresas",cuSurD:"Victorias contra rivales con 200 o más de Elo que tú",cuGift:"Regalos",cuGiftD:"Tablas o derrotas contra rivales con 200 o menos de Elo que tú",cuRound:"Ronda talismán y ronda maldita",talisman:"Talismán",cursed:"Maldita",eloWon:"Elo ganado:",eloLost:"Elo perdido:",cuNone:"Todavía no hay datos suficientes.",roundLine:(p,n)=>p+" % de puntos en "+n+(n===1?" partida":" partidas"),scorePct:"Puntuación",
+  expected:"Esperado",real:"Real",cuDef:"Elo derrotado",cuDefD:"Suma del Elo de los rivales a los que has ganado",cuDefX:(n,a)=>", en "+(n===1?"1 victoria":n+" victorias")+" · rival medio vencido: "+a,cuSur:"Sorpresas",cuSurD:"Victorias contra rivales con 200 o más de Elo que tú",cuRaj:"Rajómetro",cuRajD:"Veces que no te has presentado a una partida",cuVlad:"El hombre del saco",cuVladD:"Veces que tu rival no se ha presentado a jugar contra ti",cuNatW:"(Nacional)",cuGift:"Regalos",cuGiftD:"Tablas o derrotas contra rivales con 200 o menos de Elo que tú",cuRound:"Ronda talismán y ronda maldita",talisman:"Talismán",cursed:"Maldita",eloWon:"Elo ganado:",eloLost:"Elo perdido:",cuNone:"Todavía no hay datos suficientes.",roundLine:(p,n)=>p+" % de puntos en "+n+(n===1?" partida":" partidas"),scorePct:"Puntuación",
   colorDiff:d=>d===0?"Tu performance es igual con ambos colores.":d>0?"Con blancas tu performance es "+d+" puntos superior a la de negras.":"Con negras tu performance es "+(-d)+" puntos superior a la de blancas.",
   curveFirst:"Primer torneo",curveLast:"Actual (est.)",curveChange:"Variación",curvePeak:"Máximo",
   lgStart:"Elo al empezar",lgEnd:"Elo estimado al acabar",
@@ -946,7 +960,7 @@ const T={
   noData:"No hi ha partides valorades amb aquest filtre.",
   sec:{curious:["Curiositats","Dades curioses de les teves partides"],perf:["Performance","Últims 10 tornejos i Elo guanyat"],curve:["Corba d'Elo","El teu Elo al llarg del temps"],trend:["Tendència","Mitjana mòbil de 5 tornejos"],
     level:["Nivell del rival","Resultats i esperat davant de real"],color:["Blanques i negres","Rendiment per color"],rounds:["Per ronda","Com rendeixes segons la ronda"],records:["Rècords","Les teves millors marques"]},
-  expected:"Esperat",real:"Real",cuDef:"Elo derrotat",cuDefD:(n,a)=>"Suma de l'Elo dels rivals a qui has guanyat, en "+(n===1?"1 victòria":n+" victòries")+" · rival mitjà vençut: "+a,cuSur:"Sorpreses",cuSurD:"Victòries contra rivals amb 200 o més d'Elo que tu",cuGift:"Regals",cuGiftD:"Taules o derrotes contra rivals amb 200 o menys d'Elo que tu",cuRound:"Ronda talismà i ronda maleïda",talisman:"Talismà",cursed:"Maleïda",eloWon:"Elo guanyat:",eloLost:"Elo perdut:",cuNone:"Encara no hi ha prou dades.",roundLine:(p,n)=>p+" % de punts en "+n+(n===1?" partida":" partides"),scorePct:"Puntuació",
+  expected:"Esperat",real:"Real",cuDef:"Elo derrotat",cuDefD:"Suma de l'Elo dels rivals a qui has guanyat",cuDefX:(n,a)=>", en "+(n===1?"1 victòria":n+" victòries")+" · rival mitjà vençut: "+a,cuSur:"Sorpreses",cuSurD:"Victòries contra rivals amb 200 o més d'Elo que tu",cuRaj:"Cagòmetre",cuRajD:"Vegades que no t'has presentat a una partida",cuVlad:"L'home del sac",cuVladD:"Vegades que el teu rival no s'ha presentat a jugar contra tu",cuNatW:"(Nacional)",cuGift:"Regals",cuGiftD:"Taules o derrotes contra rivals amb 200 o menys d'Elo que tu",cuRound:"Ronda talismà i ronda maleïda",talisman:"Talismà",cursed:"Maleïda",eloWon:"Elo guanyat:",eloLost:"Elo perdut:",cuNone:"Encara no hi ha prou dades.",roundLine:(p,n)=>p+" % de punts en "+n+(n===1?" partida":" partides"),scorePct:"Puntuació",
   colorDiff:d=>d===0?"La teva performance és igual amb tots dos colors.":d>0?"Amb blanques la teva performance és "+d+" punts superior a la de negres.":"Amb negres la teva performance és "+(-d)+" punts superior a la de blanques.",
   curveFirst:"Primer torneig",curveLast:"Actual (est.)",curveChange:"Variació",curvePeak:"Màxim",
   lgStart:"Elo en començar",lgEnd:"Elo estimat en acabar",
@@ -1021,7 +1035,7 @@ const T={
   noData:"No rated games for this filter.",
   sec:{curious:["Curiosities","Fun facts from your games"],perf:["Performance","Last 10 tournaments and Elo gained"],curve:["Elo curve","Your Elo over time"],trend:["Trend","5-tournament moving average"],
     level:["Opponent strength","Results and expected vs actual"],color:["White and Black","Performance by colour"],rounds:["By round","How you score by round"],records:["Records","Your personal bests"]},
-  expected:"Expected",real:"Actual",cuDef:"Elo defeated",cuDefD:(n,a)=>"Sum of the Elo of every opponent you beat, in "+(n===1?"1 win":n+" wins")+" · average beaten opponent: "+a,cuSur:"Upsets",cuSurD:"Wins against opponents rated 200 or more above you",cuGift:"Gifts",cuGiftD:"Draws or losses against opponents rated 200 or more below you",cuRound:"Lucky round and cursed round",talisman:"Lucky",cursed:"Cursed",eloWon:"Elo gained:",eloLost:"Elo lost:",cuNone:"Not enough data yet.",roundLine:(p,n)=>p+" % score in "+n+(n===1?" game":" games"),scorePct:"Score",
+  expected:"Expected",real:"Actual",cuDef:"Elo defeated",cuDefD:"Sum of the Elo of every opponent you beat",cuDefX:(n,a)=>", in "+(n===1?"1 win":n+" wins")+" · average beaten opponent: "+a,cuSur:"Upsets",cuSurD:"Wins against opponents rated 200 or more above you",cuRaj:"Bail-o-meter",cuRajD:"Times you didn't show up for a game",cuVlad:"The Bogeyman",cuVladD:"Times your opponent didn't show up to play you",cuNatW:"(National)",cuGift:"Gifts",cuGiftD:"Draws or losses against opponents rated 200 or more below you",cuRound:"Lucky round and cursed round",talisman:"Lucky",cursed:"Cursed",eloWon:"Elo gained:",eloLost:"Elo lost:",cuNone:"Not enough data yet.",roundLine:(p,n)=>p+" % score in "+n+(n===1?" game":" games"),scorePct:"Score",
   colorDiff:d=>d===0?"Your performance is the same with both colours.":d>0?"With White your performance is "+d+" points higher than with Black.":"With Black your performance is "+(-d)+" points higher than with White.",
   curveFirst:"First tournament",curveLast:"Current (est.)",curveChange:"Change",curvePeak:"Peak",
   lgStart:"Elo at start",lgEnd:"Estimated Elo at end",
@@ -1438,7 +1452,7 @@ function kFor(tr,list){const k=tr.k||(player&&player.k)||20;if(list!=="nat")retu
 // Elo change of one game for one list (null = not rated)
 function gameDelta(tr,r,list){list=list||listOf(tr);const base=baseFor(tr,list);if(!base)return null;
   const s=myScore(r);if(s==null)return null;const K=kFor(tr,list);
-  if(fceRules(list)&&r.res&&(r.res==="+-"||r.res==="-+")&&s===1)return (K/2)*(1-.5);   // FCE art. 33: forfeit win vs equal rating, half K
+  if(fceRules(list)&&(r.res==="+-"||r.res==="-+"))return (K/2)*(s-.5);   // FCE art. 33: forfeit win vs equal rating, half K
   const opp=Number(r.opp);if(!OTB[r.res]||!(opp>0))return null;return K*(s-expList(base,opp,list))}
 function perfOf(gs){if(!gs.length)return null;const avg=gs.reduce((a,g)=>a+g.opp,0)/gs.length,p=gs.reduce((a,g)=>a+g.s,0)/gs.length;return Math.round(avg+dp(p))}
 function eloGain(tr,list){list=list||listOf(tr);if(!baseFor(tr,list))return null;let sum=0,n=0;
@@ -1464,6 +1478,9 @@ const ICONS={
   curious:'<path d="m11 3 1.8 5.2L18 10l-5.2 1.8L11 17l-1.8-5.2L4 10l5.2-1.8z"/><path d="m18.5 14 .8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/>',
   swords:'<path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="m13 19 6-6M16 16l4 4M19 21l2-2"/><path d="M9.5 6.5 18 3h3v3l-3.5 8.5"/>',
   star:'<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
+  gauge:'<path d="M4 18a9 9 0 1 1 16 0"/><path d="m12 15 4-6"/><circle cx="12" cy="15" r="1.3"/><path d="M6.5 11.5 5 10.8M12 7.5V6M17.5 11.5l1.5-.7"/>',
+  ghost:'<path d="M5 21V11a7 7 0 0 1 14 0v10l-2.5-1.8L14 21l-2-1.8L10 21l-2.5-1.8z"/><circle cx="9.5" cy="11" r=".9"/><circle cx="14.5" cy="11" r=".9"/>',
+  sack:'<path d="M9 3h6l-1.6 3.5h-2.8z"/><path d="M10.6 6.5C6 8.5 4 12.5 4 16a5 5 0 0 0 5 5h6a5 5 0 0 0 5-5c0-3.5-2-7.5-6.6-9.5"/><path d="M9 9.5l6-.5"/>',
   gift:'<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9M12 8v13"/><path d="M12 8S10.5 3.5 8 4.2 7.5 8 12 8zM12 8s1.5-4.5 4-3.8S16.5 8 12 8z"/>',
   horseshoe:'<path d="M6 4v7a6 6 0 0 0 12 0V4"/><path d="M4 4h4M16 4h4M7 9h.01M17 9h.01M8.5 14.5h.01M15.5 14.5h.01"/>',
   medal:'<circle cx="12" cy="15" r="6"/><path d="M8.5 10 6 3h4l2 5M15.5 10 18 3h-4l-2 5"/><path d="M12 12.5v5"/>'};
@@ -1689,25 +1706,34 @@ const RENDER={
     body.append(list);
   },
   curious(body,games){
-    const L=T[lang],list=mk("div","recs"),fmtInt=v=>Math.round(v).toLocaleString(L.locale);
-    const card=(ic,title,val,detail)=>{const c=mk("div","rec"),i=mk("span","sic");i.innerHTML=icon(ic);const tx=mk("div","rtx");
-      tx.append(mk("span","lbl",title),mk("span","rv",val));if(detail)tx.append(mk("span","rd",detail));c.append(i,tx);list.append(c);return tx};
+    const L=T[lang],list=mk("div","recs tiles"),fmtInt=v=>Math.round(v).toLocaleString(L.locale);
+    // detail is always visible; extra only once the tile is expanded
+    const card=(ic,title,val,detail,extra)=>{const c=mk("div","rec"),i=mk("span","sic");i.innerHTML=icon(ic);const tx=mk("div","rtx");
+      tx.append(mk("span","lbl",title),mk("span","rv",val));if(detail){const d=mk("span","rd",detail);if(extra)d.append(mk("span","rx",extra));tx.append(d)}c.append(i,tx);list.append(c);return tx};
     // Elo swing of one game, at the Elo frozen in its tournament (null if the tournament isn't rated)
     const swing=g=>gameDelta(g.tr,g.tr.rounds[g.i]);
     const mini=(tx,arr)=>{const ul=mk("ul","minilist");arr.slice(0,3).forEach(g=>{const w=swing(g);
       ul.append(mk("li",null,`${g.opp} (${fmtSigned(g.opp-g.my)}) · ${g.tr.name} R${g.i+1}`+(w!=null?` · ${fmtGain(Math.round(w*10)/10)}`:"")))});tx.append(ul)};
     // 1. Elo defeated
     const wins=games.filter(g=>g.s===1),sumW=wins.reduce((a,g)=>a+g.opp,0);
-    card("swords",t("cuDef"),wins.length?fmtInt(sumW):"0",wins.length?L.cuDefD(wins.length,Math.round(sumW/wins.length)):t("cuNone"));
+    card("swords",t("cuDef"),wins.length?fmtInt(sumW):"0",wins.length?t("cuDefD"):t("cuNone"),wins.length?L.cuDefX(wins.length,Math.round(sumW/wins.length)):"");
     // 2. upsets: wins against +200
     const ups=games.filter(g=>g.my&&g.s===1&&g.opp-g.my>=200).sort((a,b)=>(b.opp-b.my)-(a.opp-a.my));
     const upE=ups.map(swing).filter(v=>v!=null).reduce((a,v)=>a+v,0);
-    const t2=card("star",t("cuSur"),String(ups.length),t("cuSurD")+(ups.length?" · "+t("eloWon")+" "+fmtGain(Math.round(upE*10)/10):""));if(ups.length)mini(t2,ups);
+    const t2=card("star",t("cuSur"),String(ups.length),t("cuSurD"),ups.length?" · "+t("eloWon")+" "+fmtGain(Math.round(upE*10)/10):"");if(ups.length)mini(t2,ups);
     // 3. gifts: draws or losses against -200
     const gifts=games.filter(g=>g.my&&g.s<1&&g.opp-g.my<=-200).sort((a,b)=>(a.opp-a.my)-(b.opp-b.my));
     const gE=gifts.map(swing).filter(v=>v!=null).reduce((a,v)=>a+v,0);
-    const t3=card("gift",t("cuGift"),String(gifts.length),t("cuGiftD")+(gifts.length?" · "+t("eloLost")+" "+fmtGain(Math.round(gE*10)/10):""));if(gifts.length)mini(t3,gifts);
-    // 4. lucky and cursed round
+    const t3=card("gift",t("cuGift"),String(gifts.length),t("cuGiftD"),gifts.length?" · "+t("eloLost")+" "+fmtGain(Math.round(gE*10)/10):"");if(gifts.length)mini(t3,gifts);
+    // 4–5. forfeits: mine (rajómetro) and the opponent's (el hombre del saco). Only rounds with a known colour.
+    const ff=[];statList.forEach(tr=>tr.rounds.forEach((r,i)=>{if((r.res==="+-"||r.res==="-+")&&r.color){
+      const nat=tr.valid==="nat"||tr.valid==="both"?gameDelta(tr,r,"nat"):null;ff.push({tr,i,s:myScore(r),d:nat})}}));
+    const ffCard=(ic,ttl,desc,arr,wonLbl)=>{const e=arr.filter(x=>x.d!=null).reduce((a,x)=>a+x.d,0),hasE=arr.some(x=>x.d!=null);
+      const tx=card(ic,ttl,String(arr.length),desc,hasE?" · "+t(wonLbl)+" "+fmtGain(Math.round(e*10)/10)+" "+t("cuNatW"):"");
+      if(arr.length){const ul=mk("ul","minilist");arr.slice(-3).reverse().forEach(x=>ul.append(mk("li",null,[x.tr.name+" R"+(x.i+1),x.d!=null?fmtGain(Math.round(x.d*10)/10)+" "+t("natTag"):""].filter(Boolean).join(" · "))));tx.append(ul)}};
+    ffCard("gauge",t("cuRaj"),t("cuRajD"),ff.filter(x=>x.s===0),"eloLost");
+    ffCard("sack",t("cuVlad"),t("cuVladD"),ff.filter(x=>x.s===1),"eloWon");
+    // 6. lucky and cursed round
     const byR={};games.forEach(g=>{(byR[g.i]=byR[g.i]||[]).push(g)});
     let rs=Object.entries(byR).map(([i,gs])=>({r:+i+1,n:gs.length,p:Math.round(100*gs.reduce((a,g)=>a+g.s,0)/gs.length)}));
     const solid=rs.filter(x=>x.n>=3);if(solid.length>=2)rs=solid;
@@ -1716,6 +1742,10 @@ const RENDER={
       const row=(lb,x,cls)=>{const d=mk("div","rrow");d.append(mk("span","lbl",lb),mk("span","rv "+cls,"R"+x.r),mk("span","rd",L.roundLine(x.p,x.n)));return d};
       t4.append(row(t("talisman"),best,"pos"),row(t("cursed"),worst,"neg"))}
     else t4.append(mk("span","rd",t("cuNone")));
+    // square tiles: tap to expand to full width with the whole detail
+    list.querySelectorAll(".rec").forEach(c=>{c.tabIndex=0;c.setAttribute("role","button");c.setAttribute("aria-expanded","false");
+      const tog=()=>{const o=c.classList.toggle("open");c.setAttribute("aria-expanded",String(o))};
+      c.addEventListener("click",tog);c.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tog()}})});
     body.append(list);
   }
 };
