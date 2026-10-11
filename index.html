@@ -66,7 +66,7 @@ img{max-width:100%}[hidden]{display:none!important}
 :root{
   --bg:#eef0ec; --surface:#ffffff; --ink:#1b2420; --muted:#5d6a63;
   --line:#cfd6d0; --accent:#1f6b4f; --accent-ink:#ffffff; --err:#b3261e; --good:#1f6b4f; --bad:#b3261e;
-  --pw-bg:#fbfbf7; --pw-fg:#141414; --pb-bg:#161616; --pb-fg:#f6f6f2; --draw:#9aa5a0; --sqdark:#c9d6cf;
+  --pw-bg:#fbfbf7; --pw-fg:#141414; --pb-bg:#161616; --pb-fg:#f6f6f2; --draw:#9aa5a0; --sqdark:#c9d6cf; --byebg:#f1f3f1; --byetag:#e2e6e3; --chip:#e4ebe6;
   --display:"Syne","Trebuchet MS",sans-serif;
   --body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -74,11 +74,11 @@ img{max-width:100%}[hidden]{display:none!important}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#121815; --surface:#1a221e; --ink:#e7ece8; --muted:#9aa8a0;
   --line:#2f3b35; --accent:#5fbf93; --accent-ink:#0d1411; --err:#f2a49c; --good:#5fbf93; --bad:#f2a49c;
-  --pb-bg:#050505; --draw:#6b7872; --sqdark:#223129; color-scheme:dark}}
+  --pb-bg:#050505; --draw:#6b7872; --sqdark:#223129; --byebg:#1e2622; --byetag:#2a3530; --chip:#26322c; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#121815; --surface:#1a221e; --ink:#e7ece8; --muted:#9aa8a0;
   --line:#2f3b35; --accent:#5fbf93; --accent-ink:#0d1411; --err:#f2a49c; --good:#5fbf93; --bad:#f2a49c;
-  --pb-bg:#050505; --draw:#6b7872; --sqdark:#223129; color-scheme:dark}
+  --pb-bg:#050505; --draw:#6b7872; --sqdark:#223129; --byebg:#1e2622; --byetag:#2a3530; --chip:#26322c; color-scheme:dark}
 
 html,body{min-height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;padding-inline:16px;padding-block:20px 48px}
@@ -143,27 +143,36 @@ input.name{font-family:var(--body)}
 
 /* tournaments list */
 .tlist{display:flex;flex-direction:column;gap:10px}
-.tcard{display:grid;grid-template-columns:1fr auto;gap:4px 16px;align-items:center;text-align:left;width:100%;cursor:pointer;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;color:var(--ink);font:inherit}
+.tcard{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 16px;align-items:center;text-align:left;width:100%;cursor:pointer;
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;color:var(--ink);font:inherit}
 .tcard:hover{border-color:var(--accent)}
-.tcard .tn{font-weight:600;font-size:17px;overflow-wrap:anywhere;min-width:0}
-.tcard .tm{font-size:13px;color:var(--muted);grid-column:1;min-width:0}
-.tcard .tp{grid-row:1/3;grid-column:2;text-align:right;display:flex;flex-direction:column}
-.tcard .tp b{font:600 22px var(--mono);font-variant-numeric:tabular-nums}
-.tcard .tp span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tmain{display:flex;flex-direction:column;gap:6px;min-width:0}
+.tcard .tn{font-family:var(--display);font-weight:700;font-size:18px;line-height:1.2;overflow-wrap:anywhere}
+.twhen{font-size:15px;color:var(--muted);line-height:1.35}
+.tchips{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:600 13px/1 var(--body);padding:6px 10px;border-radius:999px;background:var(--chip);color:var(--ink);white-space:nowrap}
+.chip.live{background:var(--accent);color:var(--accent-ink)}
+.chip.muted{background:transparent;border:1px solid var(--line);color:var(--muted);padding:5px 9px}
+.chip.warn{color:var(--bad)}
+.tcard .tp{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.tcard .tp b{font:600 26px/1.1 var(--mono);font-variant-numeric:tabular-nums}
+.tcard .tp span{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .empty-state{border:1px dashed var(--line);border-radius:10px;padding:22px 18px;color:var(--muted);text-align:center}
 
 /* editor */
-.edhead{position:sticky;top:env(safe-area-inset-top,0px);z-index:2;background:var(--bg);padding-block:8px 12px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
+.edhead{position:relative;background:var(--bg);padding-block:8px 12px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
 .meta{font-size:14px;color:var(--muted);margin:0}
-.perf{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface);border:1px solid var(--line);border-radius:10px}
-.perf>div{padding:10px 14px;display:flex;flex-direction:column;min-width:0}
-.perf>div+div{border-left:1px solid var(--line)}
+.perf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.perf>div{padding:10px 14px;display:flex;flex-direction:column;min-width:0;background:var(--surface)}
+.perf .pos{color:var(--good)} .perf .neg{color:var(--bad)}
 .perf .big{font:600 30px/1.15 var(--mono);font-variant-numeric:tabular-nums}
-.perf .mid{font:600 20px/1.5 var(--mono);font-variant-numeric:tabular-nums}
+.perf .mid{font:600 30px/1.15 var(--mono);font-variant-numeric:tabular-nums}
 
 .rounds{display:flex;flex-direction:column;gap:8px}
-.rhead,.round{display:grid;grid-template-columns:92px 40px minmax(0,1fr) minmax(0,1.15fr);gap:10px;align-items:center}
+.rhead,.round{display:grid;grid-template-columns:92px 40px minmax(0,1fr) minmax(0,1.15fr) 52px;gap:10px;align-items:center}
+.rdelta{font:600 14px var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap;color:var(--ink)}
+.rdelta.pos{color:var(--good)} .rdelta.neg{color:var(--bad)} .rdelta.none{color:var(--muted)}
+.rhead span:last-child{text-align:right}
 .rhead{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 10px}
 .round{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
 .colors{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
@@ -176,6 +185,10 @@ input.name{font-family:var(--body)}
 .ball.w{background:var(--pw-bg);color:var(--pw-fg);border:1.5px solid var(--pw-fg)}
 .ball.b{background:var(--pb-bg);color:var(--pb-fg);border:1.5px solid var(--pb-bg)}
 .round input,.round select{padding:9px 8px;font-size:16px}
+.byetag{display:none}
+.round.bye{grid-template-columns:40px minmax(0,1fr) minmax(0,1.15fr) 52px;background:var(--byebg)}
+.round.bye .colors,.round.bye input{display:none}
+.round.bye .byetag{display:flex;align-items:center;justify-content:center;height:40px;border-radius:8px;background:var(--byetag);color:var(--muted);font:700 15px var(--mono);letter-spacing:.18em}
 .round select.r-win{color:var(--good)} .round select.r-loss{color:var(--bad)}
 .legend{font-size:12px;color:var(--muted);margin:0}
 
@@ -257,8 +270,9 @@ input.name{font-family:var(--body)}
 .rrow{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:4px}
 .rrow .lbl{min-width:5.5em}
 .rv.pos{color:var(--good)} .rv.neg{color:var(--bad)}
-.dock{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;padding-top:18px;border-top:1px solid var(--line)}
-.dockbtn{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;color:var(--muted);font:500 12px var(--body);cursor:pointer;padding:0}
+.dock{display:grid;grid-template-columns:repeat(4,78px);justify-content:center;gap:10px;padding-top:18px;border-top:1px solid var(--line)}
+.dockbtn{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;color:var(--muted);font:500 11.5px var(--body);cursor:pointer;padding:0;width:100%;min-width:0}
+.dockbtn>span:last-child{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
 .dockic{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:border-color .12s ease,color .12s ease}
 .dockic svg{width:22px;height:22px}
 .dockbtn:hover .dockic{border-color:var(--accent);color:var(--accent)}
@@ -288,14 +302,63 @@ a[aria-disabled="true"]{opacity:.45;pointer-events:none}
 .linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
 .demobtn{align-self:center;background:none;border:1px solid var(--line);border-radius:999px;padding:7px 16px;font:500 13px var(--body);color:var(--muted);cursor:pointer}
 .demobtn:hover{border-color:var(--accent);color:var(--accent)}
+.savebar{position:fixed;left:50%;transform:translateX(-50%);width:min(520px,calc(100% - 24px));box-sizing:border-box;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:20;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--surface);border:1px solid var(--accent);border-radius:12px;padding:10px 12px;box-shadow:0 6px 24px rgba(0,0,0,.18)}
+.savebar span{font-weight:600;font-size:14px}
+.savebar .actions{gap:8px}.savebar .btn{padding:10px 14px}
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(10,14,12,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.dialog{background:var(--surface);color:var(--ink);border-radius:14px;padding:20px 18px;max-width:380px;width:100%;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.dialog h3{font-family:var(--display);font-weight:700;font-size:20px;margin:0}
+.dialog p{margin:0;color:var(--muted)}
+.dlgbtns{display:flex;flex-direction:column;gap:8px}.dlgbtns .btn{width:100%}
+.evr2{display:flex;flex-direction:column;gap:6px;padding:10px 12px;border-radius:10px;background:var(--bg);border-left:3px solid var(--line)}
+.evr2.up{border-left-color:var(--good)} .evr2.down{border-left-color:var(--bad)}
+.evr2 p{margin:0}
+.evh{font-weight:700;font-size:15px;line-height:1.3}
+.evr2.up .evh{color:var(--good)} .evr2.down .evh{color:var(--bad)}
+.evr2.big .evh{font-size:18px}
+.evs{font-size:13.5px;color:var(--muted);line-height:1.4}
+.evs b{white-space:nowrap}
+.evs b,.evn b{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
+.evbar{position:relative;height:10px;border-radius:999px;background:var(--line);margin:4px 0 2px}
+.evfill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:var(--draw)}
+.evr2.up .evfill{background:var(--good)} .evr2.down .evfill{background:var(--bad)}
+.evmark{position:absolute;top:-4px;bottom:-4px;width:3px;margin-left:-1.5px;border-radius:2px;background:var(--ink)}
+.evn{font-size:12.5px;color:var(--muted)}
+.hrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.hrow h3{font-family:var(--display);font-weight:600;font-size:19px;margin:0}
+.helpbtn{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--accent);font:700 15px var(--body);cursor:pointer;display:grid;place-items:center}
+.helpbtn:hover{border-color:var(--accent)}
+.dialog.help{max-width:440px;max-height:calc(100vh - 48px);overflow:auto}
+.helpbody{display:flex;flex-direction:column;gap:10px;font-size:14.5px;line-height:1.5}
+.helpbody p{margin:0;color:var(--ink)}
+.helpbody .legend{color:var(--muted)}
+.edmini{position:fixed;left:0;right:0;top:0;z-index:15;padding-top:env(safe-area-inset-top,0px);background:var(--bg);border-bottom:1px solid var(--line);
+  box-shadow:0 6px 18px rgba(0,0,0,.08);transform:translateY(-105%);opacity:0;transition:transform .28s cubic-bezier(.2,.8,.2,1),opacity .2s ease;pointer-events:none}
+.edmini.on{transform:none;opacity:1;pointer-events:auto}
+.edmini-in{max-width:520px;margin:0 auto;padding:8px 16px 10px;display:flex;flex-direction:column;gap:8px;box-sizing:border-box}
+.mrow{display:flex;align-items:center;gap:10px}
+.mrow .back,.mrow .homebtn{width:36px;height:36px;margin:0;flex:none}
+.mrow .back svg,.mrow .homebtn svg{width:19px;height:19px}
+.mtitle{flex:1;min-width:0;font-family:var(--display);font-weight:700;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.mstats>div{background:var(--surface);padding:6px 8px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.mstats span{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mstats b{font:600 17px/1.2 var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mstats b.pos{color:var(--good)} .mstats b.neg{color:var(--bad)}
+@media (prefers-reduced-motion:reduce){.edmini{transition:none}}
 footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
 @media (max-width:420px){
-  .rhead,.round{grid-template-columns:80px 34px minmax(0,1fr) minmax(0,1.2fr);gap:7px}
-  .colors button{width:38px}
-  .ball{width:34px;height:34px;font-size:14px}
+  .rhead,.round{grid-template-columns:72px 32px minmax(0,1fr) minmax(0,1.3fr) 40px;gap:6px}
+  .round.bye{grid-template-columns:32px minmax(0,1fr) minmax(0,1.3fr) 40px}
+  .colors button{width:36px}
+  .rdelta{font-size:12.5px}
+  .perf{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ball{width:32px;height:32px;font-size:14px}
   .rhead{padding:0 8px} .round{padding:7px 8px}
   .perf>div{padding:10px}
-  .perf .big{font-size:26px}
+  .perf .big{font-size:28px}
+  .perf .mid{font-size:28px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 .brand h2.title{font-weight:800}
@@ -317,13 +380,13 @@ input,select,textarea{font-size:max(16px,1em)}
   .tiles .val{font-size:22px}
   .tiles>div{padding:10px 12px}
   .tiles .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .tcard{padding:12px 14px}
-  .tcard .tm{font-size:12px}
+  .tcard{padding:14px;gap:10px 12px}
+  .tcard .tp b{font-size:22px}
   .sbtn{gap:8px}
-  .dock{gap:14px}
+  .dock{grid-template-columns:repeat(4,minmax(0,78px));gap:8px}
   .dockic{width:44px;height:44px}
-  .perf .big{font-size:26px}
-  .perf .mid{font-size:18px}
+  .perf .big{font-size:28px}
+  .perf .mid{font-size:28px}
   .delta{font-size:12px}
 }
 </style>
@@ -593,6 +656,28 @@ input,select,textarea{font-size:max(16px,1em)}
   <p class="toast" id="bkStatus" aria-live="polite"></p>
 </section>
 
+<!-- HELP DIALOG -->
+<div class="overlay" id="helpDlg" hidden>
+  <div class="dialog help" role="dialog" aria-modal="true" aria-labelledby="helpT">
+    <h3 id="helpT" data-i18n="evrHelpT"></h3>
+    <div id="helpBody" class="helpbody"></div>
+    <button class="btn go" type="button" id="helpClose" data-i18n="evrHelpOk"></button>
+  </div>
+</div>
+
+<!-- LEAVE DIALOG -->
+<div class="overlay" id="leaveDlg" hidden>
+  <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="leaveT">
+    <h3 id="leaveT" data-i18n="leaveT"></h3>
+    <p data-i18n="leaveP"></p>
+    <div class="dlgbtns">
+      <button class="btn go" type="button" id="leaveSave" data-i18n="leaveSave"></button>
+      <button class="btn danger" type="button" id="leaveDiscard" data-i18n="leaveDiscard"></button>
+      <button class="btn" type="button" id="leaveStay" data-i18n="leaveStay"></button>
+    </div>
+  </div>
+</div>
+
 <!-- EDITOR -->
 <section class="view" id="vEdit" hidden>
   <div class="edhead">
@@ -603,6 +688,18 @@ input,select,textarea{font-size:max(16px,1em)}
       <div><span class="lbl" data-i18n="perf"></span><span class="big" id="ePerf">—</span><span class="delta" id="eDelta"></span></div>
       <div><span class="lbl" data-i18n="points"></span><span class="mid" id="ePts">0</span></div>
       <div><span class="lbl" data-i18n="avgOpp"></span><span class="mid" id="eAvg">—</span></div>
+      <div><span class="lbl">Elo</span><span class="mid" id="eElo">—</span><span class="delta" id="eEloSub"></span></div>
+    </div>
+  </div>
+  <div class="edmini" id="edMini" aria-hidden="true">
+    <div class="edmini-in">
+      <div class="mrow"><button class="back" type="button" data-go="list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg><span class="sr" data-i18n="myTours"></span></button><span class="mtitle" id="mName"></span><button class="homebtn" type="button" data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></button></div>
+      <div class="mstats">
+        <div><span data-i18n="perfAbbr"></span><b id="mPerf">—</b></div>
+        <div><span data-i18n="points"></span><b id="mPts">—</b></div>
+        <div><span data-i18n="avgShort"></span><b id="mAvg">—</b></div>
+        <div><span>Elo</span><b id="mElo">—</b></div>
+      </div>
     </div>
   </div>
   <div class="upd" id="updBox" hidden role="region" aria-live="polite">
@@ -666,8 +763,12 @@ input,select,textarea{font-size:max(16px,1em)}
       <button class="btn go" type="submit" data-i18n="saveChanges"></button>
     </div>
   </form>
+  <div class="savebar" id="saveBar" hidden>
+    <span id="saveMsg"></span>
+    <div class="actions"><button class="btn" type="button" id="discardBtn" data-i18n="discard"></button><button class="btn go" type="button" id="saveBtn" data-i18n="saveChanges"></button></div>
+  </div>
   <div class="rounds">
-    <div class="rhead" aria-hidden="true"><span data-i18n="hColor"></span><span data-i18n="hRound"></span><span data-i18n="hOpp"></span><span data-i18n="hRes"></span></div>
+    <div class="rhead" aria-hidden="true"><span data-i18n="hColor"></span><span data-i18n="hRound"></span><span data-i18n="hOpp"></span><span data-i18n="hRes"></span><span>±Elo</span></div>
     <div id="roundList" class="rounds"></div>
   </div>
   <p class="legend" data-i18n="legend"></p>
@@ -699,7 +800,12 @@ input,select,textarea{font-size:max(16px,1em)}
 
 <script>
 const T={
- es:{cardDark:"Oscuro",cardLight:"Claro",perfAbbr:"Perf.",demoOn:"Demo con 24 torneos simulados",demoOff:"Quitar la demo",cloudTip:"Tus datos solo se guardan en este dispositivo. Te recomendamos hacer una copia de seguridad y guardarla en la nube.",cloudTipBtn:"Hacer copia",bkRestored:n=>"Copia restaurada: "+(n===1?"1 torneo":n+" torneos")+".",backup:"Copia",backupT:"Copia de seguridad",bkLede:"Tus torneos solo se guardan en este dispositivo. Haz una copia de vez en cuando y guárdala en tu nube o en tu correo: te servirá si cambias de móvil o se borran los datos.",
+ es:{avgShort:"Media riv.",evrHead:(a,up)=>"Has sumado "+a+(a==="1,0"?" punto ":" puntos ")+(up?"más":"menos")+" de lo esperado",evrEq:"Has sumado lo esperado",evrEqSub:"Juegas justo a tu nivel Elo.",
+  evrCmp:(a,up)=>{const n=Math.round(a*2)/2,ns=n.toLocaleString("es-ES");return a<0.75?"Es como unas tablas "+(up?"de más":"de menos"):a<1.25?"Es como "+(up?"una victoria de más":"una derrota de más"):"Es como si hubieras "+(up?"ganado ":"perdido ")+ns+" partidas de más"},
+  evrOf:"puntos de",evrExp:"esperados",evrTitle:"Rendimiento frente a lo esperado",evrHelpT:"¿Qué es «lo esperado»?",evrHelpOk:"Entendido",
+  evrHelp:["Según la diferencia de Elo, cada partida tiene una puntuación «lógica»: lo que sacarías de media si la jugaras muchas veces. Contra alguien de tu nivel es 0,5 puntos; contra alguien 200 puntos más fuerte, solo 0,24.","Arpad suma esas puntuaciones de todas tus partidas y las compara con los puntos que hiciste de verdad. Si haces más de lo esperado, juegas por encima de tu Elo y lo subes; si haces menos, lo bajas.","En la barra, la raya marca lo esperado y el relleno, lo que conseguiste."],
+  evrHelpCol1:"Rival respecto a ti",evrHelpCol2:"Puntos esperados",evrSame:"Mismo Elo",evrOrMore:"o más",evrOrLess:"o menos",
+  evrHelpFoot:"El Elo que ganas o pierdes es K × (puntos reales − puntos esperados). Con K20, un punto por encima de lo esperado son +20 de Elo.",vChip:{fide:"FIDE",nat:"Nacional",both:"FIDE + Nacional",none:"Amistoso"},roundsOf:(a,b)=>a?a+" de "+b+" rondas":"Por empezar",unsaved:"Tienes cambios sin guardar",draftRestored:"Cambios sin guardar recuperados",discard:"Descartar",leaveT:"¿Guardar los cambios?",leaveP:"Has modificado rondas de este torneo y aún no las has guardado.",leaveSave:"Guardar y salir",leaveDiscard:"Salir sin guardar",leaveStay:"Seguir editando",cardDark:"Oscuro",cardLight:"Claro",perfAbbr:"Perf.",demoOn:"Demo con 24 torneos simulados",demoOff:"Quitar la demo",cloudTip:"Tus datos solo se guardan en este dispositivo. Te recomendamos hacer una copia de seguridad y guardarla en la nube.",cloudTipBtn:"Hacer copia",bkRestored:n=>"Copia restaurada: "+(n===1?"1 torneo":n+" torneos")+".",backup:"Copia",backupT:"Copia de seguridad",bkLede:"Tus torneos solo se guardan en este dispositivo. Haz una copia de vez en cuando y guárdala en tu nube o en tu correo: te servirá si cambias de móvil o se borran los datos.",
   bkExportT:"Exportar",bkHave:n=>"Se guardarán tu Elo actual y "+(n===1?"1 torneo":n+" torneos")+".",bkExport:"Descargar copia",bkCopy:"Copiar al portapapeles",
   bkLastAt:d=>"Última copia: "+d+".",bkNever:"Todavía no has hecho ninguna copia.",bkSaved:"Copia guardada.",bkCopied:"Copia copiada. Pégala en una nota o un correo para guardarla.",
   bkSaveFail:"No se ha podido descargar. Usa «Copiar al portapapeles».",bkCopyFail:"No se ha podido copiar.",
@@ -766,10 +872,15 @@ const T={
   noTours:"Aún no tienes torneos. Pulsa «Añadir torneo» para crear el primero.",tourN:n=>n===1?"1 torneo":n+" torneos",tourNone:"Crea y sigue tus torneos",
   played:(a,b)=>a+" de "+b+" rondas",perf:"Performance",points:"Puntos",avgOpp:"Media rivales",
   hColor:"Color",hRound:"R",hOpp:"Elo rival",hRes:"Resultado",W:"B",B:"N",colW:"Blancas",colB:"Negras",
-  legend:"Resultados en notación estándar (blancas primero): los puntos se calculan según tu color. Con menos de 3 partidas valoradas la performance lleva «?» porque aún es poco fiable. La performance usa la tabla FIDE (media de rivales + dp) y solo cuenta partidas jugadas con Elo del rival; las incomparecencias suman puntos pero no entran en la performance.",
+  legend:"Resultados en notación estándar (blancas primero): los puntos se calculan según tu color. Con menos de 3 partidas valoradas la performance lleva «?» porque aún es poco fiable. La performance usa la tabla FIDE (media de rivales + dp) y solo cuenta partidas jugadas con Elo del rival; las incomparecencias suman puntos pero no entran en la performance. «Bye» es una ronda sin partida (descanso pedido): cuenta 0 puntos y no entra en la performance.",
   vsElo:d=>(d>0?"+":"")+d+" vs tu Elo",delTour:"Eliminar torneo",delConfirm:"Se borrará el torneo con todas sus rondas. Esta acción no se puede deshacer.",delYes:"Eliminar",
   footer:"Llamada así por Arpad Elo (1903–1992), creador del sistema de puntuación.",locale:"es-ES"},
- ca:{cardDark:"Fosc",cardLight:"Clar",perfAbbr:"Perf.",demoOn:"Demo amb 24 tornejos simulats",demoOff:"Treure la demo",cloudTip:"Les teves dades només es desen en aquest dispositiu. Et recomanem fer una còpia de seguretat i guardar-la al núvol.",cloudTipBtn:"Fer còpia",bkRestored:n=>"Còpia restaurada: "+(n===1?"1 torneig":n+" tornejos")+".",backup:"Còpia",backupT:"Còpia de seguretat",bkLede:"Els teus tornejos només es desen en aquest dispositiu. Fes-ne una còpia de tant en tant i guarda-la al núvol o al correu: et servirà si canvies de mòbil o s'esborren les dades.",
+ ca:{avgShort:"Mitj. riv.",evrHead:(a,up)=>"Has sumat "+a+(a==="1,0"?" punt ":" punts ")+(up?"més":"menys")+" del que s'esperava",evrEq:"Has sumat el que s'esperava",evrEqSub:"Jugues just al teu nivell Elo.",
+  evrCmp:(a,up)=>{const n=Math.round(a*2)/2,ns=n.toLocaleString("ca-ES");return a<0.75?"És com unes taules "+(up?"de més":"de menys"):a<1.25?"És com "+(up?"una victòria de més":"una derrota de més"):"És com si haguessis "+(up?"guanyat ":"perdut ")+ns+" partides de més"},
+  evrOf:"punts de",evrExp:"esperats",evrTitle:"Rendiment respecte a l'esperat",evrHelpT:"Què és «l'esperat»?",evrHelpOk:"Entesos",
+  evrHelp:["Segons la diferència d'Elo, cada partida té una puntuació «lògica»: el que trauries de mitjana si la juguessis moltes vegades. Contra algú del teu nivell és 0,5 punts; contra algú 200 punts més fort, només 0,24.","Arpad suma aquestes puntuacions de totes les teves partides i les compara amb els punts que vas fer de veritat. Si en fas més dels esperats, jugues per sobre del teu Elo i el puges; si en fas menys, el baixes.","A la barra, la ratlla marca l'esperat i l'emplenat, el que vas aconseguir."],
+  evrHelpCol1:"Rival respecte a tu",evrHelpCol2:"Punts esperats",evrSame:"Mateix Elo",evrOrMore:"o més",evrOrLess:"o menys",
+  evrHelpFoot:"L'Elo que guanyes o perds és K × (punts reals − punts esperats). Amb K20, un punt per sobre de l'esperat són +20 d'Elo.",vChip:{fide:"FIDE",nat:"Nacional",both:"FIDE + Nacional",none:"Amistós"},roundsOf:(a,b)=>a?a+" de "+b+" rondes":"Per començar",unsaved:"Tens canvis sense desar",draftRestored:"Canvis sense desar recuperats",discard:"Descartar",leaveT:"Vols desar els canvis?",leaveP:"Has modificat rondes d'aquest torneig i encara no les has desat.",leaveSave:"Desar i sortir",leaveDiscard:"Sortir sense desar",leaveStay:"Continuar editant",cardDark:"Fosc",cardLight:"Clar",perfAbbr:"Perf.",demoOn:"Demo amb 24 tornejos simulats",demoOff:"Treure la demo",cloudTip:"Les teves dades només es desen en aquest dispositiu. Et recomanem fer una còpia de seguretat i guardar-la al núvol.",cloudTipBtn:"Fer còpia",bkRestored:n=>"Còpia restaurada: "+(n===1?"1 torneig":n+" tornejos")+".",backup:"Còpia",backupT:"Còpia de seguretat",bkLede:"Els teus tornejos només es desen en aquest dispositiu. Fes-ne una còpia de tant en tant i guarda-la al núvol o al correu: et servirà si canvies de mòbil o s'esborren les dades.",
   bkExportT:"Exportar",bkHave:n=>"Es desaran el teu Elo actual i "+(n===1?"1 torneig":n+" tornejos")+".",bkExport:"Descarregar còpia",bkCopy:"Copiar al porta-retalls",
   bkLastAt:d=>"Última còpia: "+d+".",bkNever:"Encara no has fet cap còpia.",bkSaved:"Còpia desada.",bkCopied:"Còpia copiada. Enganxa-la en una nota o un correu per guardar-la.",
   bkSaveFail:"No s'ha pogut descarregar. Fes servir «Copiar al porta-retalls».",bkCopyFail:"No s'ha pogut copiar.",
@@ -836,10 +947,15 @@ const T={
   noTours:"Encara no tens tornejos. Prem «Afegir torneig» per crear el primer.",tourN:n=>n===1?"1 torneig":n+" tornejos",tourNone:"Crea i segueix els teus tornejos",
   played:(a,b)=>a+" de "+b+" rondes",perf:"Performance",points:"Punts",avgOpp:"Mitjana rivals",
   hColor:"Color",hRound:"R",hOpp:"Elo rival",hRes:"Resultat",W:"B",B:"N",colW:"Blanques",colB:"Negres",
-  legend:"Resultats en notació estàndard (blanques primer): els punts es calculen segons el teu color. Amb menys de 3 partides valorades la performance porta «?» perquè encara és poc fiable. La performance fa servir la taula FIDE (mitjana de rivals + dp) i només compta partides jugades amb Elo del rival; les incompareixences sumen punts però no entren a la performance.",
+  legend:"Resultats en notació estàndard (blanques primer): els punts es calculen segons el teu color. Amb menys de 3 partides valorades la performance porta «?» perquè encara és poc fiable. La performance fa servir la taula FIDE (mitjana de rivals + dp) i només compta partides jugades amb Elo del rival; les incompareixences sumen punts però no entren a la performance. «Bye» és una ronda sense partida (descans demanat): compta 0 punts i no entra a la performance.",
   vsElo:d=>(d>0?"+":"")+d+" vs el teu Elo",delTour:"Eliminar torneig",delConfirm:"S'esborrarà el torneig amb totes les rondes. Aquesta acció no es pot desfer.",delYes:"Eliminar",
   footer:"Anomenada així per Arpad Elo (1903–1992), creador del sistema de puntuació.",locale:"ca-ES"},
- en:{cardDark:"Dark",cardLight:"Light",perfAbbr:"Perf.",demoOn:"Demo with 24 simulated tournaments",demoOff:"Remove the demo",cloudTip:"Your data is only stored on this device. We recommend making a backup and keeping it in the cloud.",cloudTipBtn:"Back up now",bkRestored:n=>"Backup restored: "+(n===1?"1 tournament":n+" tournaments")+".",backup:"Backup",backupT:"Backup",bkLede:"Your tournaments are only stored on this device. Make a backup now and then and keep it in your cloud or email: you'll need it if you change phones or the data gets cleared.",
+ en:{avgShort:"Avg. opp.",evrHead:(a,up)=>"You scored "+a+(a==="1.0"?" point ":" points ")+(up?"more":"fewer")+" than expected",evrEq:"You scored as expected",evrEqSub:"You're playing right at your Elo level.",
+  evrCmp:(a,up)=>{const n=Math.round(a*2)/2;return a<0.75?"That's like "+(up?"an extra draw":"one draw fewer"):a<1.25?"That's like "+(up?"an extra win":"an extra loss"):"That's as if you'd "+(up?"won ":"lost ")+n+" more games"},
+  evrOf:"points out of",evrExp:"expected",evrTitle:"Performance vs expected",evrHelpT:"What does “expected” mean?",evrHelpOk:"Got it",
+  evrHelp:["Based on the Elo difference, every game has a “logical” score: what you'd get on average if you played it many times. Against someone your level it's 0.5 points; against someone 200 points stronger, just 0.24.","Arpad adds up those scores across your games and compares them with the points you actually scored. Score more than expected and you're playing above your Elo, so it goes up; score less and it goes down.","On the bar, the line marks what was expected and the fill shows what you got."],
+  evrHelpCol1:"Opponent vs you",evrHelpCol2:"Expected points",evrSame:"Same Elo",evrOrMore:"or more",evrOrLess:"or less",
+  evrHelpFoot:"The Elo you gain or lose is K × (actual points − expected points). With K20, one point above expected is +20 Elo.",vChip:{fide:"FIDE",nat:"National",both:"FIDE + National",none:"Friendly"},roundsOf:(a,b)=>a?a+" of "+b+" rounds":"Not started",unsaved:"You have unsaved changes",draftRestored:"Unsaved changes recovered",discard:"Discard",leaveT:"Save your changes?",leaveP:"You've changed rounds in this tournament and haven't saved them yet.",leaveSave:"Save and leave",leaveDiscard:"Leave without saving",leaveStay:"Keep editing",cardDark:"Dark",cardLight:"Light",perfAbbr:"Perf.",demoOn:"Demo with 24 simulated tournaments",demoOff:"Remove the demo",cloudTip:"Your data is only stored on this device. We recommend making a backup and keeping it in the cloud.",cloudTipBtn:"Back up now",bkRestored:n=>"Backup restored: "+(n===1?"1 tournament":n+" tournaments")+".",backup:"Backup",backupT:"Backup",bkLede:"Your tournaments are only stored on this device. Make a backup now and then and keep it in your cloud or email: you'll need it if you change phones or the data gets cleared.",
   bkExportT:"Export",bkHave:n=>"Your current Elo and "+(n===1?"1 tournament":n+" tournaments")+" will be saved.",bkExport:"Download backup",bkCopy:"Copy to clipboard",
   bkLastAt:d=>"Last backup: "+d+".",bkNever:"You haven't made a backup yet.",bkSaved:"Backup saved.",bkCopied:"Backup copied. Paste it into a note or an email to keep it.",
   bkSaveFail:"Couldn't download it. Use “Copy to clipboard”.",bkCopyFail:"Couldn't copy it.",
@@ -906,12 +1022,12 @@ const T={
   noTours:"No tournaments yet. Tap “Add tournament” to create your first one.",tourN:n=>n===1?"1 tournament":n+" tournaments",tourNone:"Create and track your tournaments",
   played:(a,b)=>a+" of "+b+" rounds",perf:"Performance",points:"Points",avgOpp:"Avg. opponent",
   hColor:"Colour",hRound:"R",hOpp:"Opp. Elo",hRes:"Result",W:"W",B:"B",colW:"White",colB:"Black",
-  legend:"Results use standard notation (White first): points are worked out from your colour. With fewer than 3 rated games the performance shows “?” because it isn't reliable yet. Performance uses the FIDE table (average opponent + dp) and only counts games played against a rated opponent; forfeits add points but don't count towards performance.",
+  legend:"Results use standard notation (White first): points are worked out from your colour. With fewer than 3 rated games the performance shows “?” because it isn't reliable yet. Performance uses the FIDE table (average opponent + dp) and only counts games played against a rated opponent; forfeits add points but don't count towards performance. “Bye” is a round with no game (requested rest): it scores 0 points and doesn't count towards performance.",
   vsElo:d=>(d>0?"+":"")+d+" vs your Elo",delTour:"Delete tournament",delConfirm:"This deletes the tournament and all its rounds. It can't be undone.",delYes:"Delete",
   footer:"Named after Arpad Elo (1903–1992), who created the rating system.",locale:"en-GB"}
 };
 const RES_ORDER=["","10","hh","01","+-","-+","--"];
-const RES_LABEL={"":"—","10":"1-0","hh":"1/2-1/2","01":"0-1","+-":"+-","-+":"-+","--":"--"};
+const RES_LABEL={"":"—","10":"1-0","hh":"1/2-1/2","01":"0-1","+-":"+-","-+":"-+","--":"Bye"};
 // points for White; Black gets the complement (except "--": nobody scores)
 const WSCORE={"10":1,"hh":.5,"01":0,"+-":1,"-+":0,"--":0};
 const OTB={"10":1,"hh":1,"01":1};
@@ -952,16 +1068,22 @@ function perfTxt(perf,n){return perf==null?"—":perf+(n<MIN_PERF?"?":"")
 /* views */
 let navPop=false;
 function show(v){["Home","List","Edit","Stats","Stat","About","Suggest","Donate","Backup"].forEach(x=>$("v"+x).hidden=x!==v);try{window.scrollTo(0,0)}catch(e){}
+  if(typeof edScroll==="function")edScroll();
   if(!navPop){try{history.pushState({v,id:current&&current.id,sec:curSec},"")}catch(e){}}}
-window.addEventListener("popstate",e=>{const st=e.state||{v:"Home"};navPop=true;
+window.addEventListener("popstate",e=>{const st=e.state||{v:"Home"};
+  if(!$("vEdit").hidden&&dirty&&!(st.v==="Edit"&&current&&st.id===current.id)){
+    try{history.pushState({v:"Edit",id:current.id},"")}catch(x){}
+    askLeave(()=>{goState(st)});return}
+  goState(st)});
+function goState(st){navPop=true;
   try{if(st.v==="Edit"&&st.id&&tours.some(x=>x.id===st.id))openTour(st.id);
     else if(st.v==="Stat"&&st.sec){curSec=st.sec;chartSel=null;show("Stat");renderSec()}
     else if(st.v==="Stats"){show("Stats");renderHub()}
     else if(st.v==="List"||st.v==="Edit"){show("List");renderList()}
     else if(["About","Suggest","Donate","Backup"].includes(st.v))openInfo(st.v);
-    else{show("Home");renderHome()}}finally{navPop=false}});
+    else{show("Home");renderHome()}}finally{navPop=false}}
 try{history.replaceState({v:"Home"},"")}catch(e){}
-document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{const g=b.dataset.go;if(g==="home"){show("Home");renderHome()}else if(g==="stats"){show("Stats");renderHub()}else{show("List");renderList()}}));
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{const g=b.dataset.go;if(!$("vEdit").hidden&&dirty){askLeave(()=>b.click());return}if(g==="home"){show("Home");renderHome()}else if(g==="stats"){show("Stats");renderHub()}else{show("List");renderList()}}));
 
 function renderStatic(){
   document.documentElement.lang=lang;
@@ -983,14 +1105,30 @@ function renderList(){
   if(!tours.length){const d=document.createElement("div");d.className="empty-state";d.textContent=t("noTours");box.append(d);return}
   [...tours].sort((a,b)=>String(b.start||b.created||"").localeCompare(String(a.start||a.created||""))||String(b.created||"").localeCompare(String(a.created||""))).forEach(tr=>{
     const s=stats(tr),b=document.createElement("button");b.type="button";b.className="tcard";
-    const n=document.createElement("span");n.className="tn";n.textContent=tr.name;
-    const m=document.createElement("span");m.className="tm";
-    m.textContent=[tr.demo&&t("demo"),tr.place,dateRange(tr),tcLabel(tr),tr.valid&&T[lang].vShort[tr.valid],T[lang].played(s.played,tr.rounds.length)].filter(Boolean).join(" · ");
-    const p=document.createElement("span");p.className="tp";
-    const pb=document.createElement("b");pb.textContent=perfTxt(s.perf,s.n);const pl=document.createElement("span");pl.textContent=t("perf");
-    p.append(pb,pl);b.append(n,p,m);b.addEventListener("click",()=>openTour(tr.id));box.append(b);
+    const mk2=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e};
+    // 1st line: name · 2nd: when & where · 3rd: a few chips
+    const main=mk2("span","tmain");
+    main.append(mk2("span","tn",tr.name));
+    const where=[shortRange(tr),tr.place].filter(Boolean).join("  ·  ");
+    if(where)main.append(mk2("span","twhen",where));
+    const chips=mk2("span","tchips");
+    const c=tcClass(tr),kind=[c&&T[lang].modes[c],tr.valid&&T[lang].vChip[tr.valid]].filter(Boolean).join(" · ");
+    if(kind)chips.append(mk2("span","chip"+(c==="bullet"?" warn":tr.valid==="none"?" muted":""),kind));
+    const done=s.played>=tr.rounds.length;
+    chips.append(mk2("span","chip"+(done?"":" live"),done?fmtPts(s.pts)+" / "+tr.rounds.length:T[lang].roundsOf(s.played,tr.rounds.length)));
+    if(tr.demo)chips.append(mk2("span","chip muted",t("demo")));
+    const p=mk2("span","tp");
+    p.append(mk2("b",null,perfTxt(s.perf,s.n)),mk2("span",null,t("perf")));
+    b.append(main,p,chips);b.addEventListener("click",()=>openTour(tr.id));box.append(b);
   });
 }
+const shortRange=tr=>{if(!tr.start)return fmtDate(tr.end);const [y1,m1,d1]=tr.start.split("-").map(Number),dt1=new Date(y1,m1-1,d1);
+  const L=t("locale"),f=(d,o)=>d.toLocaleDateString(L,o);
+  if(!tr.end||tr.end===tr.start)return f(dt1,{day:"numeric",month:"short",year:"numeric"});
+  const [y2,m2,d2]=tr.end.split("-").map(Number),dt2=new Date(y2,m2-1,d2);
+  if(y1===y2&&m1===m2)return d1+"–"+f(dt2,{day:"numeric",month:"short",year:"numeric"});
+  if(y1===y2)return f(dt1,{day:"numeric",month:"short"})+" – "+f(dt2,{day:"numeric",month:"short",year:"numeric"});
+  return fmtDate(tr.start)+" – "+fmtDate(tr.end)};
 const dateRange=tr=>tr.start&&tr.end&&tr.end!==tr.start?fmtDate(tr.start)+" – "+fmtDate(tr.end):fmtDate(tr.start||tr.end);
 
 /* language */
@@ -1074,9 +1212,34 @@ $("addPanel").addEventListener("submit",ev=>{ev.preventDefault();
 /* editor */
 function openTour(id){
   current=tours.find(x=>x.id===id);if(!current)return;
+  snap=JSON.stringify(current.rounds);dirty=false;
+  {let d=null;try{d=JSON.parse(store.get("arpad.draft")||"null")}catch(e){}
+   if(d&&d.id===current.id&&Array.isArray(d.rounds)&&d.rounds.length===current.rounds.length&&JSON.stringify(d.rounds)!==snap){current.rounds=d.rounds;dirty=true}
+   else if(d&&d.id===current.id)clearDraft()}
   $("delBox").hidden=true;$("delAsk").hidden=false;toggleMod(false);$("updBox").hidden=true;pendingUpd=null;
-  show("Edit");renderEditor();
+  show("Edit");renderEditor();paintDirty(dirty&&"restored");
 }
+/* unsaved round edits */
+let snap=null,dirty=false,leaveAction=null;
+function saveDraft(){try{store.set("arpad.draft",JSON.stringify({id:current.id,rounds:current.rounds}))}catch(e){}}
+function clearDraft(){try{localStorage.removeItem("arpad.draft")}catch(e){}}
+function paintDirty(restored){$("saveBar").hidden=!dirty;document.body.style.paddingBottom=dirty?"96px":"";if(dirty)$("saveMsg").textContent=t(restored?"draftRestored":"unsaved")}
+function markDirty(){if(!current)return;dirty=JSON.stringify(current.rounds)!==snap;if(dirty)saveDraft();else clearDraft();paintDirty()}
+function commitEdits(){saveTours();clearDraft();if(current)snap=JSON.stringify(current.rounds);dirty=false;paintDirty()}
+function discardEdits(){if(current&&snap)current.rounds=JSON.parse(snap);clearDraft();dirty=false;paintDirty();if(current&&!$("vEdit").hidden)renderEditor()}
+function askLeave(fn){leaveAction=fn;$("leaveDlg").hidden=false;$("leaveSave").focus()}
+function closeLeave(run){$("leaveDlg").hidden=true;const fn=leaveAction;leaveAction=null;if(run&&fn)fn()}
+$("saveBtn").addEventListener("click",()=>commitEdits());
+$("discardBtn").addEventListener("click",()=>discardEdits());
+$("leaveSave").addEventListener("click",()=>{commitEdits();closeLeave(true)});
+$("leaveDiscard").addEventListener("click",()=>{discardEdits();closeLeave(true)});
+$("leaveStay").addEventListener("click",()=>closeLeave(false));
+$("leaveDlg").addEventListener("click",e=>{if(e.target===$("leaveDlg"))closeLeave(false)});
+$("helpClose").addEventListener("click",()=>{$("helpDlg").hidden=true});
+$("helpDlg").addEventListener("click",e=>{if(e.target===$("helpDlg"))$("helpDlg").hidden=true});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("helpDlg").hidden=true});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("leaveDlg").hidden)closeLeave(false)});
+addEventListener("beforeunload",e=>{if(dirty){e.preventDefault();e.returnValue=""}});
 let pendingUpd=null;
 // after creating a tournament: offer to copy its Elo/K into the player's current values
 function offerUpdate(tr){
@@ -1124,30 +1287,33 @@ $("modPanel").addEventListener("submit",ev=>{ev.preventDefault();
   if(n>tr.rounds.length)for(let i=tr.rounds.length;i<n;i++)tr.rounds.push({color:"",opp:"",res:""});
   else tr.rounds.length=n;
   Object.assign(tr,{name,place:$("mPlace").value.trim(),start,end,valid,myElo,myEloNat,k:kVal,tc});
-  saveTours();toggleMod(false);renderEditor();
+  commitEdits();toggleMod(false);renderEditor();
 });
 function renderEditor(){
   const tr=current;$("eName").textContent=tr.name;
   const meta=[tr.place,dateRange(tr),tcLabel(tr),tr.valid&&T[lang].vShort[tr.valid]].filter(Boolean).join(" · ");$("eMeta").textContent=meta;$("eMeta").hidden=!meta;
-  const list=$("roundList");list.replaceChildren();
+  const list=$("roundList");list.replaceChildren();deltaEls=[];
   tr.rounds.forEach((r,i)=>{
     const row=document.createElement("div");row.className="round";
     const col=document.createElement("div");col.className="colors";col.setAttribute("role","group");col.setAttribute("aria-label",t("hColor")+" R"+(i+1));
     const ball=document.createElement("span");ball.className="ball";ball.textContent=i+1;
     [["w","W","colW"],["b","B","colB"]].forEach(([c,lbl,full])=>{
       const b=document.createElement("button");b.type="button";b.className=c;b.textContent=t(lbl);b.title=t(full);b.setAttribute("aria-label",t(full));
-      b.addEventListener("click",()=>{r.color=r.color===c?"":c;saveTours();paintColor(col,ball,r.color);paintRes(sel,r,col);renderPerf()});col.append(b);
+      b.addEventListener("click",()=>{r.color=r.color===c?"":c;markDirty();paintColor(col,ball,r.res==="--"?"":r.color);paintRes(sel,r,col);renderPerf()});col.append(b);
     });
     paintColor(col,ball,r.color);
     let sel;
     const opp=document.createElement("input");opp.type="number";opp.inputMode="numeric";opp.min="0";opp.max="3500";opp.placeholder="1800";
     opp.id="opp-"+tr.id+"-"+i;opp.value=r.opp;opp.setAttribute("aria-label",t("hOpp")+" R"+(i+1));
-    opp.addEventListener("input",()=>{r.opp=opp.value;saveTours();renderPerf()});
+    opp.addEventListener("input",()=>{r.opp=opp.value;markDirty();renderPerf()});
     sel=document.createElement("select");sel.id="res-"+tr.id+"-"+i;sel.setAttribute("aria-label",t("hRes")+" R"+(i+1));
     RES_ORDER.forEach(v=>{const o=document.createElement("option");o.value=v;o.textContent=RES_LABEL[v];sel.append(o)});
     sel.value=r.res;paintRes(sel,r,col);
-    sel.addEventListener("change",()=>{r.res=sel.value;saveTours();paintRes(sel,r,col);renderPerf()});
-    row.append(col,ball,opp,sel);list.append(row);
+    const bye=document.createElement("span");bye.className="byetag";bye.textContent="BYE";
+    const paintBye=()=>{const on=r.res==="--";row.classList.toggle("bye",on);paintColor(col,ball,on?"":r.color)};
+    sel.addEventListener("change",()=>{r.res=sel.value;markDirty();paintRes(sel,r,col);paintBye();renderPerf()});
+    const dl=document.createElement("span");dl.className="rdelta";deltaEls[i]=dl;
+    row.append(col,ball,opp,bye,sel,dl);list.append(row);paintBye();
   });
   renderPerf();
 }
@@ -1160,6 +1326,27 @@ function paintRes(sel,r,col){
   sel.classList.toggle("r-win",decisive&&s===1);sel.classList.toggle("r-loss",decisive&&s===0);
   col.classList.toggle("need",!!r.res&&r.res!=="--"&&!r.color);
 }
+let deltaEls=[];
+const fmtD=v=>{const r=Math.round(v*10)/10,a=Math.abs(r).toLocaleString(T[lang].locale,{minimumFractionDigits:1,maximumFractionDigits:1});return r>0?"+"+a:r<0?"−"+a:a};
+function roundDelta(tr,r,base){if(tr.valid==="none"||!base)return null;const s=myScore(r),opp=Number(r.opp);
+  if(s==null||!OTB[r.res]||!(opp>0))return null;return (tr.k||(player&&player.k)||20)*(s-expScore(base,opp))}
+function paintDeltas(){const tr=current;if(!tr)return;let tot=0,any=false,totN=0,anyN=false;
+  tr.rounds.forEach((r,i)=>{const el=deltaEls[i];const d=roundDelta(tr,r,tr.myElo);
+    if(tr.valid==="both"&&tr.myEloNat){const dn=roundDelta(tr,r,tr.myEloNat);if(dn!=null){totN+=dn;anyN=true}}
+    if(!el)return;
+    if(d==null){el.textContent=r.res&&r.res!=="--"&&tr.valid!=="none"?"–":"";el.className="rdelta none";return}
+    tot+=d;any=true;const rr=Math.round(d*10)/10;el.textContent=fmtD(d);el.className="rdelta"+(rr>0?" pos":rr<0?" neg":"")});
+  const e=$("eElo"),sub=$("eEloSub");
+  if(tr.valid==="none"){e.textContent=t("vChip").none;e.className="mid";sub.textContent="";return}
+  if(!any){e.textContent="—";e.className="mid";sub.textContent="";return}
+  const rt=Math.round(tot*10)/10;e.textContent=fmtD(tot);e.className="mid"+(rt>0?" pos":rt<0?" neg":"");
+  sub.className="delta";sub.textContent=tr.valid==="both"&&anyN?t("statusNat")+" "+fmtD(totN):tr.valid==="nat"?t("statusNat"):tr.valid==="fide"||tr.valid==="both"?"FIDE":""}
+function syncMini(){if(!current)return;$("mName").textContent=current.name;
+  [["ePerf","mPerf"],["ePts","mPts"],["eAvg","mAvg"],["eElo","mElo"]].forEach(([a,b])=>{const A=$(a),B=$(b);B.textContent=A.textContent;B.className=A.classList.contains("pos")?"pos":A.classList.contains("neg")?"neg":""})}
+function edScroll(){const m=$("edMini");if($("vEdit").hidden){m.classList.remove("on");m.setAttribute("aria-hidden","true");return}
+  const h=document.querySelector(".edhead"),lim=h.offsetTop+h.offsetHeight-60,on=scrollY>lim;
+  if(on!==m.classList.contains("on")){m.classList.toggle("on",on);m.setAttribute("aria-hidden",String(!on))}}
+addEventListener("scroll",edScroll,{passive:true});addEventListener("resize",edScroll);
 function renderPerf(){
   const s=stats(current);
   $("ePerf").textContent=perfTxt(s.perf,s.n);$("ePerf").title=s.n&&s.n<MIN_PERF?t("perfFew"):"";
@@ -1170,11 +1357,13 @@ function renderPerf(){
   const ref=current.myElo||(player&&(useNat?player.nat:player.fide));
   if(s.perf!=null&&ref){const diff=s.perf-ref;d.textContent=T[lang][current.myElo?"vsTour":useNat?"vsNat":"vsFide"](diff);d.className="delta "+(diff>0?"up":diff<0?"down":"")}
   else{d.textContent="";d.className="delta"}
+  paintDeltas();syncMini();
   updateCardBtn();
+  if(!$("cardBox").hidden&&!missingRounds(current)){clearTimeout(cardT);cardT=setTimeout(()=>drawCard(false),350)}
 }
 $("delAsk").addEventListener("click",()=>{$("delBox").hidden=false;$("delAsk").hidden=true});
 $("delNo").addEventListener("click",()=>{$("delBox").hidden=true;$("delAsk").hidden=false});
-$("delYes").addEventListener("click",()=>{tours=tours.filter(x=>x!==current);saveTours();current=null;show("List");renderList()});
+$("delYes").addEventListener("click",()=>{tours=tours.filter(x=>x!==current);clearDraft();dirty=false;saveTours();current=null;show("List");renderList()});
 
 /* language change while in editor/list */
 document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",()=>{if(current&&!$("vEdit").hidden)renderEditor()}));
@@ -1232,10 +1421,31 @@ function wdl(w,d,l){const n=w+d+l,box=mk("div","wdl");const bar=mk("div","bar"+(
     [["w",w,"rW","good"],["d",d,"rD","draw"],["l",l,"rL","bad"]].forEach(([c,x,lb,tok])=>{const s=mk("span");const i=mk("i");i.style.background=`var(--${tok})`;s.append(i,`${t(lb)} ${Math.round(100*x/n)} %`);pct.append(s)})}
   box.style.display="flex";box.style.flexDirection="column";box.style.gap="6px";box.append(bar);if(n)box.append(pct);return box}
 const countWDL=gs=>({w:gs.filter(g=>g.s===1).length,d:gs.filter(g=>g.s===.5).length,l:gs.filter(g=>g.s===0).length});
-function expVsReal(gs){const m=gs.filter(g=>g.my);return{e:m.reduce((a,g)=>a+expScore(g.my,g.opp),0),r:m.reduce((a,g)=>a+g.s,0),n:m.length}}
-function evrLine(x){const p=mk("p","evr");if(!x.n)return p;const d=x.r-x.e;
-  p.append(t("expected")+" ",mk("b",null,fmtNum(x.e))," · "+t("real")+" ",mk("b",null,fmtNum(x.r))," · ",
-    mk("b",d>=.05?"up":d<=-.05?"down":null,(d>=.05?"+":d<=-.05?"−":"±")+fmtNum(Math.abs(d))));return p}
+function expVsReal(gs){const m=gs.filter(g=>g.my);return{e:m.reduce((a,g)=>a+expScore(g.my,g.opp),0),r:m.reduce((a,g)=>a+g.s,0),n:m.length,
+  elo:m.reduce((a,g)=>a+(g.tr.k||(player&&player.k)||20)*(g.s-expScore(g.my,g.opp)),0)}}
+function evrLine(x,big){const box=mk("div","evr2"+(big?" big":""));if(!x.n)return box;
+  const L=T[lang],d=x.r-x.e,a=Math.abs(d),tone=a<0.25?"eq":d>0?"up":"down";
+  box.classList.add(tone);
+  box.append(mk("p","evh",tone==="eq"?L.evrEq:L.evrHead(fmtNum(a),d>0)));
+  const cmp=tone==="eq"?L.evrEqSub:L.evrCmp(a,d>0);
+  const elo=Math.round(x.elo);const sub=mk("p","evs",cmp);
+  if(tone!=="eq"&&elo)sub.append(" · ",mk("b",null,"≈ "+(elo>0?"+":"−")+Math.abs(elo)+" Elo"));
+  box.append(sub);
+  // bar: 0 … number of games; marker = expected, fill = actual
+  const bar=mk("div","evbar"),fill=mk("span","evfill"),mark=mk("span","evmark");
+  fill.style.width=Math.min(100,100*x.r/x.n)+"%";mark.style.left=Math.min(100,100*x.e/x.n)+"%";
+  bar.append(fill,mark);box.append(bar);
+  const leg=mk("p","evn");leg.append(mk("b",null,fmtNum(x.r))," "+L.evrOf+" ",mk("b",null,fmtNum(x.e))," "+L.evrExp+" · "+L.games(x.n));box.append(leg);
+  return box}
+function helpBtn(){const b=mk("button","helpbtn","?");b.type="button";b.setAttribute("aria-label",t("evrHelpT"));b.title=t("evrHelpT");
+  b.addEventListener("click",openHelp);return b}
+function openHelp(){const box=$("helpBody");box.replaceChildren();const L=T[lang];
+  L.evrHelp.forEach(par=>box.append(mk("p",null,par)));
+  const tb=mk("table","rtab"),hr=mk("tr");[L.evrHelpCol1,L.evrHelpCol2].forEach(x=>hr.append(mk("th",null,x)));const th=mk("thead");th.append(hr);tb.append(th);
+  const bd=mk("tbody");[[0,"0,50"],[100,"0,36"],[200,"0,24"],[400,"0,09"],[-100,"0,64"],[-200,"0,76"],[-400,"0,91"]].forEach(([dd,v])=>{const r=mk("tr");
+    r.append(mk("td",null,dd===0?L.evrSame:(dd>0?"+":"−")+Math.abs(dd)+(dd===400||dd===-400?(dd>0?" "+L.evrOrMore:" "+L.evrOrLess):"")),mk("td",null,lang==="en"?v.replace(",","."):v));bd.append(r)});
+  tb.append(bd);const w=mk("div","tw");w.append(tb);box.append(w,mk("p","legend",L.evrHelpFoot));
+  $("helpDlg").hidden=false;$("helpClose").focus()}
 function tiles(list){const g=mk("div","tiles");list.forEach(([l,v,cls])=>{const c=mk("div");c.append(mk("span","lbl",l),mk("span","val"+(cls?" "+cls:""),String(v)));g.append(c)});return g}
 function legend(items){const r=mk("div","lgrow");items.forEach(([svg,txt])=>{const s=mk("span","lg");s.innerHTML=svg;s.append(mk("span",null,txt));r.append(s)});return r}
 const LG_LINE=(c,dash)=>`<svg width="22" height="10" aria-hidden="true"><line x1="1" y1="5" x2="21" y2="5" stroke="var(--${c})" stroke-width="${dash?2:2.5}"${dash?' stroke-dasharray="4 3"':""}/>${dash?"":`<circle cx="11" cy="5" r="3.5" fill="var(--${c})"/>`}</svg>`;
@@ -1359,9 +1569,9 @@ const RENDER={
   },
   level(body,games){
     const gs=games.filter(g=>g.my);
-    const top=mk("div","card");const h=mk("div","chead");h.append(mk("h3",null,t("vsTitle")));
+    const top=mk("div","card");const h=mk("div","chead");{const hh=mk("div","hrow");hh.append(mk("h3",null,t("vsTitle")),helpBtn());h.append(hh)}
     const tot=mk("p","hint",T[lang].totalGames(gs.length)+(games.length-gs.length?T[lang].skipped(games.length-gs.length):""));h.append(tot);
-    const all=mk("div","evrwrap");all.append(evrLine(expVsReal(gs)));
+    
     const box=mk("div","cats");
     CAT_ORDER.forEach(k=>{
       const cg=gs.filter(g=>catOf(g.opp-g.my)===k),[nm,rg]=T[lang].cats[k],c=countWDL(cg);
@@ -1369,10 +1579,11 @@ const RENDER={
       row.append(left,mk("span","cc",cg.length?T[lang].games(cg.length):t("noGames")));
       el.append(row,wdl(c.w,c.d,c.l));if(cg.length)el.append(evrLine(expVsReal(cg)));box.append(el);
     });
-    top.append(h,all,box,mk("p","legend",t("vsNote")));body.append(top);
+    top.append(h,box,mk("p","legend",t("vsNote")));body.append(top);
   },
   color(body,games){
     const grid=mk("div","duo"),perf={};
+    {const hh=mk("div","hrow");hh.append(mk("h3",null,t("evrTitle")),helpBtn());body.append(hh)}
     ["w","b"].forEach(c=>{
       const gs=games.filter(g=>g.color===c),k=countWDL(gs);perf[c]=perfOf(gs);
       const card=mk("section","card"),h=mk("div","ct2"),ball=mk("span","ball "+c,t(c==="w"?"W":"B"));
@@ -1515,7 +1726,7 @@ $("demoBtn").addEventListener("click",()=>{if(hasDemo()){tours=tours.filter(x=>!
 $("clearDemo").addEventListener("click",()=>{tours=tours.filter(x=>!x.demo);saveTours();renderList()});
 
 /* ---------- about / feedback / donate ---------- */
-const CONFIG={version:"1.0",formKey:"6b7143c0-ee47-4d96-a039-fd96e847fcd7",paypal:"https://paypal.me/arpadelocalc"};   // formKey: Web3Forms access key (messages reach the mailbox without exposing it)
+const CONFIG={version:"1.1",formKey:"6b7143c0-ee47-4d96-a039-fd96e847fcd7",paypal:"https://paypal.me/arpadelocalc"};   // formKey: Web3Forms access key (messages reach the mailbox without exposing it)
 function openInfo(v){show(v);
   if(v==="Backup")renderBackup();
   if(v==="About")$("aboutVer").textContent=t("version")+" "+CONFIG.version;
@@ -1587,11 +1798,13 @@ async function makeCard(tr,theme){
   const n=tr.rounds.length,perRow=Math.min(10,n),cell=(W-2*P)/perRow,rad=Math.min(32,cell*0.36);
   tr.rounds.forEach((r,i)=>{const row=Math.floor(i/perRow),col=i%perRow,cx=P+cell*col+cell/2,cy=y+rad+row*(rad*2+70);
     g.beginPath();g.arc(cx,cy,rad,0,Math.PI*2);
-    if(r.color==="w"){g.fillStyle=C.wp;g.fill();if(theme==="light"){g.strokeStyle="#1b2420";g.lineWidth=2;g.stroke()}}else if(r.color==="b"){g.fillStyle=C.bp;g.fill();g.strokeStyle=C.line;g.lineWidth=2;g.stroke()}
+    const rc=r.res==="--"?"":r.color;
+    if(rc==="w"){g.fillStyle=C.wp;g.fill();if(theme==="light"){g.strokeStyle="#1b2420";g.lineWidth=2;g.stroke()}}else if(rc==="b"){g.fillStyle=C.bp;g.fill();g.strokeStyle=C.line;g.lineWidth=2;g.stroke()}
     else{g.strokeStyle=C.line;g.lineWidth=2;g.setLineDash([6,5]);g.stroke();g.setLineDash([])}
-    g.fillStyle=r.color==="w"?"#141414":r.color==="b"?"#f6f6f2":C.ink;g.font=`600 ${Math.round(rad*0.8)}px ${F.num}`;g.textAlign="center";g.textBaseline="middle";g.fillText(String(i+1),cx,cy+1);
+    g.fillStyle=rc==="w"?"#141414":rc==="b"?"#f6f6f2":C.ink;g.font=`600 ${Math.round(rad*0.8)}px ${F.num}`;g.textAlign="center";g.textBaseline="middle";g.fillText(String(i+1),cx,cy+1);
     const sc=myScore(r),sym=r.res==="--"?"–":(r.res==="+-"||r.res==="-+")?(sc===1?"+":"−"):sc===1?"1":sc===.5?"½":"0";
-    g.fillStyle=sc===1?C.good:sc===0&&r.res!=="--"?C.bad:C.draw;g.font=`700 ${Math.round(rad*0.95)}px ${F.num}`;g.fillText(sym,cx,cy+rad+30);
+    g.fillStyle=sc===1?C.good:sc===0&&r.res!=="--"?C.bad:C.draw;
+    if(r.res==="--"){g.font=`700 ${Math.round(rad*0.62)}px ${F.num}`;g.fillText("BYE",cx,cy+rad+30)}else{g.font=`700 ${Math.round(rad*0.95)}px ${F.num}`;g.fillText(sym,cx,cy+rad+30)}
     g.textAlign="left";g.textBaseline="alphabetic"});
   y+=Math.ceil(n/perRow)*(rad*2+70)+30;
   // detail lines
@@ -1626,7 +1839,7 @@ async function makeCard(tr,theme){
    g.fillStyle=C.mut;g.fillText(t2,x0+w1+hw,by)}
   return cv;
 }
-let cardCanvas=null;
+let cardCanvas=null,cardT;
 let cardTheme=store.get("arpad.cardTheme")==="light"?"light":"dark";
 function paintCardTheme(){document.querySelectorAll("#cardTheme button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.theme===cardTheme))}
 async function drawCard(scroll){if(!current||missingRounds(current))return;
