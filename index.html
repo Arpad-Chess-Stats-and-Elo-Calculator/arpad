@@ -445,6 +445,14 @@ input,select,textarea{font-size:max(16px,1em)}
         <label for="kOtherInput" data-i18n="kOtherLabel"></label>
         <input id="kOtherInput" type="text" inputmode="decimal" placeholder="15">
       </div>
+      <div class="field">
+        <label for="natSysSel" data-i18n="natSysL"></label>
+        <select id="natSysSel">
+          <option value="fce" data-i18n="natSysFce"></option>
+          <option value="fide" data-i18n="natSysFide"></option>
+        </select>
+        <span class="hint" data-i18n="natSysHint"></span>
+      </div>
       <p class="err" id="eloErr" role="alert"></p>
       <div class="actions">
         <button class="btn" type="button" id="eloCancel" data-i18n="cancel"></button>
@@ -530,6 +538,11 @@ input,select,textarea{font-size:max(16px,1em)}
     <div class="field" id="tKOtherField" hidden>
       <label for="tKOther" data-i18n="kOtherLabel"></label>
       <input id="tKOther" type="text" inputmode="decimal" placeholder="15">
+    </div>
+    <div class="field" id="tKNatField" hidden>
+      <label for="tKNat" data-i18n="kNatL"></label>
+      <select id="tKNat"><option value="10">K = 10</option><option value="20">K = 20</option><option value="40">K = 40</option></select>
+      <span class="hint" id="tKNatHint"></span>
     </div>
     <p class="err" id="addErr" role="alert"></p>
     <div class="actions">
@@ -686,8 +699,8 @@ input,select,textarea{font-size:max(16px,1em)}
     <p class="meta" id="eMeta" hidden></p>
     <div class="perf" aria-live="polite">
       <div><span class="lbl" data-i18n="perf"></span><span class="big" id="ePerf">—</span><span class="delta" id="eDelta"></span></div>
-      <div><span class="lbl" data-i18n="points"></span><span class="mid" id="ePts">0</span></div>
-      <div><span class="lbl" data-i18n="avgOpp"></span><span class="mid" id="eAvg">—</span></div>
+      <div><span class="lbl" data-i18n="points"></span><span class="mid" id="ePts">0</span><span class="delta" id="ePtsSub"></span></div>
+      <div><span class="lbl" data-i18n="avgOpp"></span><span class="mid" id="eAvg">—</span><span class="delta" id="eAvgSub"></span></div>
       <div><span class="lbl">Elo</span><span class="mid" id="eElo">—</span><span class="delta" id="eEloSub"></span></div>
     </div>
   </div>
@@ -757,6 +770,11 @@ input,select,textarea{font-size:max(16px,1em)}
       <label for="mKOther" data-i18n="kOtherLabel"></label>
       <input id="mKOther" type="text" inputmode="decimal" placeholder="15">
     </div>
+    <div class="field" id="mKNatField" hidden>
+      <label for="mKNat" data-i18n="kNatL"></label>
+      <select id="mKNat"><option value="10">K = 10</option><option value="20">K = 20</option><option value="40">K = 40</option></select>
+      <span class="hint" id="mKNatHint"></span>
+    </div>
     <p class="err" id="modErr" role="alert"></p>
     <div class="actions">
       <button class="btn" type="button" id="modCancel" data-i18n="cancel"></button>
@@ -800,7 +818,7 @@ input,select,textarea{font-size:max(16px,1em)}
 
 <script>
 const T={
- es:{avgShort:"Media riv.",evrHead:(a,up)=>"Has sumado "+a+(a==="1,0"?" punto ":" puntos ")+(up?"más":"menos")+" de lo esperado",evrEq:"Has sumado lo esperado",evrEqSub:"Juegas justo a tu nivel Elo.",
+ es:{noByes:"sin contar byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs tu Elo",natSysL:"Elo Nacional calculado con",natSysFce:"Reglamento FCE (Catalunya)",natSysFide:"Reglas FIDE (FEDA y otras federaciones)",natSysHint:"La FCE no limita la diferencia a 400 puntos, solo usa K20 o K40 y en rápidas siempre K20.",kNatL:"Coeficiente K Nacional",kNatFceHint:"FCE: K40 para nuevos jugadores (menos de 30 partidas) y sub-18 por debajo de 2300; K20 en el resto.",kNatFast:"FCE: en rápidas y blitz el K es siempre 20.",avgShort:"Media riv.",evrHead:(a,up)=>"Has sumado "+a+(a==="1,0"?" punto ":" puntos ")+(up?"más":"menos")+" de lo esperado",evrEq:"Has sumado lo esperado",evrEqSub:"Juegas justo a tu nivel Elo.",
   evrCmp:(a,up)=>{const n=Math.round(a*2)/2,ns=n.toLocaleString("es-ES");return a<0.75?"Es como unas tablas "+(up?"de más":"de menos"):a<1.25?"Es como "+(up?"una victoria de más":"una derrota de más"):"Es como si hubieras "+(up?"ganado ":"perdido ")+ns+" partidas de más"},
   evrOf:"puntos de",evrExp:"esperados",evrTitle:"Rendimiento frente a lo esperado",evrHelpT:"¿Qué es «lo esperado»?",evrHelpOk:"Entendido",
   evrHelp:["Según la diferencia de Elo, cada partida tiene una puntuación «lógica»: lo que sacarías de media si la jugaras muchas veces. Contra alguien de tu nivel es 0,5 puntos; contra alguien 200 puntos más fuerte, solo 0,24.","Arpad suma esas puntuaciones de todas tus partidas y las compara con los puntos que hiciste de verdad. Si haces más de lo esperado, juegas por encima de tu Elo y lo subes; si haces menos, lo bajas.","En la barra, la raya marca lo esperado y el relleno, lo que conseguiste."],
@@ -875,7 +893,7 @@ const T={
   legend:"Resultados en notación estándar (blancas primero): los puntos se calculan según tu color. Con menos de 3 partidas valoradas la performance lleva «?» porque aún es poco fiable. La performance usa la tabla FIDE (media de rivales + dp) y solo cuenta partidas jugadas con Elo del rival; las incomparecencias suman puntos pero no entran en la performance. «Bye» es una ronda sin partida (descanso pedido): cuenta 0 puntos y no entra en la performance.",
   vsElo:d=>(d>0?"+":"")+d+" vs tu Elo",delTour:"Eliminar torneo",delConfirm:"Se borrará el torneo con todas sus rondas. Esta acción no se puede deshacer.",delYes:"Eliminar",
   footer:"Llamada así por Arpad Elo (1903–1992), creador del sistema de puntuación.",locale:"es-ES"},
- ca:{avgShort:"Mitj. riv.",evrHead:(a,up)=>"Has sumat "+a+(a==="1,0"?" punt ":" punts ")+(up?"més":"menys")+" del que s'esperava",evrEq:"Has sumat el que s'esperava",evrEqSub:"Jugues just al teu nivell Elo.",
+ ca:{noByes:"sense comptar byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs el teu Elo",natSysL:"Elo Nacional calculat amb",natSysFce:"Reglament FCE (Catalunya)",natSysFide:"Regles FIDE (FEDA i altres federacions)",natSysHint:"La FCE no limita la diferència a 400 punts, només fa servir K20 o K40 i en ràpides sempre K20.",kNatL:"Coeficient K Nacional",kNatFceHint:"FCE: K40 per a jugadors nous (menys de 30 partides) i sub-18 per sota de 2300; K20 a la resta.",kNatFast:"FCE: en ràpides i llampecs la K és sempre 20.",avgShort:"Mitj. riv.",evrHead:(a,up)=>"Has sumat "+a+(a==="1,0"?" punt ":" punts ")+(up?"més":"menys")+" del que s'esperava",evrEq:"Has sumat el que s'esperava",evrEqSub:"Jugues just al teu nivell Elo.",
   evrCmp:(a,up)=>{const n=Math.round(a*2)/2,ns=n.toLocaleString("ca-ES");return a<0.75?"És com unes taules "+(up?"de més":"de menys"):a<1.25?"És com "+(up?"una victòria de més":"una derrota de més"):"És com si haguessis "+(up?"guanyat ":"perdut ")+ns+" partides de més"},
   evrOf:"punts de",evrExp:"esperats",evrTitle:"Rendiment respecte a l'esperat",evrHelpT:"Què és «l'esperat»?",evrHelpOk:"Entesos",
   evrHelp:["Segons la diferència d'Elo, cada partida té una puntuació «lògica»: el que trauries de mitjana si la juguessis moltes vegades. Contra algú del teu nivell és 0,5 punts; contra algú 200 punts més fort, només 0,24.","Arpad suma aquestes puntuacions de totes les teves partides i les compara amb els punts que vas fer de veritat. Si en fas més dels esperats, jugues per sobre del teu Elo i el puges; si en fas menys, el baixes.","A la barra, la ratlla marca l'esperat i l'emplenat, el que vas aconseguir."],
@@ -950,7 +968,7 @@ const T={
   legend:"Resultats en notació estàndard (blanques primer): els punts es calculen segons el teu color. Amb menys de 3 partides valorades la performance porta «?» perquè encara és poc fiable. La performance fa servir la taula FIDE (mitjana de rivals + dp) i només compta partides jugades amb Elo del rival; les incompareixences sumen punts però no entren a la performance. «Bye» és una ronda sense partida (descans demanat): compta 0 punts i no entra a la performance.",
   vsElo:d=>(d>0?"+":"")+d+" vs el teu Elo",delTour:"Eliminar torneig",delConfirm:"S'esborrarà el torneig amb totes les rondes. Aquesta acció no es pot desfer.",delYes:"Eliminar",
   footer:"Anomenada així per Arpad Elo (1903–1992), creador del sistema de puntuació.",locale:"ca-ES"},
- en:{avgShort:"Avg. opp.",evrHead:(a,up)=>"You scored "+a+(a==="1.0"?" point ":" points ")+(up?"more":"fewer")+" than expected",evrEq:"You scored as expected",evrEqSub:"You're playing right at your Elo level.",
+ en:{noByes:"excluding byes",avgVs:d=>(d>0?"+":d<0?"−":"±")+Math.abs(d)+" vs your Elo",natSysL:"National Elo calculated with",natSysFce:"FCE rules (Catalonia)",natSysFide:"FIDE rules (FEDA and other federations)",natSysHint:"The FCE doesn't cap the difference at 400 points, only uses K20 or K40, and rapid is always K20.",kNatL:"National K-factor",kNatFceHint:"FCE: K40 for new players (fewer than 30 games) and under-18s below 2300; K20 otherwise.",kNatFast:"FCE: rapid and blitz always use K20.",avgShort:"Avg. opp.",evrHead:(a,up)=>"You scored "+a+(a==="1.0"?" point ":" points ")+(up?"more":"fewer")+" than expected",evrEq:"You scored as expected",evrEqSub:"You're playing right at your Elo level.",
   evrCmp:(a,up)=>{const n=Math.round(a*2)/2;return a<0.75?"That's like "+(up?"an extra draw":"one draw fewer"):a<1.25?"That's like "+(up?"an extra win":"an extra loss"):"That's as if you'd "+(up?"won ":"lost ")+n+" more games"},
   evrOf:"points out of",evrExp:"expected",evrTitle:"Performance vs expected",evrHelpT:"What does “expected” mean?",evrHelpOk:"Got it",
   evrHelp:["Based on the Elo difference, every game has a “logical” score: what you'd get on average if you played it many times. Against someone your level it's 0.5 points; against someone 200 points stronger, just 0.24.","Arpad adds up those scores across your games and compares them with the points you actually scored. Score more than expected and you're playing above your Elo, so it goes up; score less and it goes down.","On the bar, the line marks what was expected and the fill shows what you got."],
@@ -1140,6 +1158,7 @@ function toggleElo(open){
   if(open){$("toast").textContent="";
     if(player){$("nameInput").value=player.name||"";$("fideInput").value=player.fide||"";$("natInput").value=player.nat||"";
       if([10,20,40].includes(player.k)){$("kSelect").value=String(player.k);$("kOtherInput").value=""}else{$("kSelect").value="other";$("kOtherInput").value=player.k}}
+    $("natSysSel").value=natSys();
     $("kOtherField").hidden=$("kSelect").value!=="other";$("fideInput").focus()}
 }
 $("openElo").addEventListener("click",()=>toggleElo($("eloPanel").hidden));
@@ -1151,16 +1170,22 @@ $("eloPanel").addEventListener("submit",ev=>{ev.preventDefault();
   if(!$("natInput").value||!(nat>=100&&nat<=3500)){$("eloErr").textContent=t("errNat");$("natInput").focus();return}
   let k=$("kSelect").value;k=k==="other"?Number(String($("kOtherInput").value).replace(",",".")):Number(k);
   if(!(k>0)){$("eloErr").textContent=t("errK");return}
-  player={name:$("nameInput").value.trim().replace(/\s+/g," ").slice(0,60),fide,nat,k};store.set("arpad.player",JSON.stringify(player));toggleElo(false);renderHome();$("toast").textContent=t("saved");
+  player={name:$("nameInput").value.trim().replace(/\s+/g," ").slice(0,60),fide,nat,k,natSys:$("natSysSel").value};store.set("arpad.player",JSON.stringify(player));toggleElo(false);renderHome();$("toast").textContent=t("saved");
 });
 
 /* tournaments */
 $("openTour").addEventListener("click",()=>{show("List");renderList()});
 function toggleAdd(open){$("addPanel").hidden=!open;$("openAdd").setAttribute("aria-expanded",open);$("addErr").textContent="";
-  if(open){["tName","tRounds","tPlace","tStart","tEnd","tValid","tMin","tInc"].forEach(i=>$(i).value="");tcHint("t");$("tMy").value=defMy("");$("tMy").dataset.touched="";$("tMyNat").value="";myFields("t");setK("t",player&&player.k);$("tName").focus()}}
+  if(open){["tName","tRounds","tPlace","tStart","tEnd","tValid","tMin","tInc"].forEach(i=>$(i).value="");tcHint("t");$("tMy").value=defMy("");$("tMy").dataset.touched="";$("tMyNat").value="";$("tKNat").value=String(defKNat());myFields("t");setK("t",player&&player.k);$("tName").focus()}}
 const defMy=valid=>player?((valid==="nat"?player.nat:player.fide)||player.fide||player.nat||""):"";
 $("tMy").addEventListener("input",()=>{$("tMy").dataset.touched="1"});
-function myFields(px){const both=$(px+"Valid").value==="both";$(px+"MyNatField").hidden=!both;
+function defKNat(k){k=Number(k)||(player&&player.k)||20;return natSys()==="fce"&&k===10?20:k}
+function kNatHint(px){const mi=Number($(px+"Min").value),c=mi>0?classOfMin(mi):null,h=$(px+"KNatHint");
+  const fce=natSys()==="fce",fast=fce&&(c==="rapid"||c==="blitz"),sel=$(px+"KNat");
+  sel.querySelector('option[value="10"]').disabled=fce;if(fce&&sel.value==="10")sel.value="20";
+  if(fast){sel.dataset.prev=sel.dataset.prev||sel.value;sel.value="20";sel.disabled=true}else{if(sel.disabled&&sel.dataset.prev)sel.value=sel.dataset.prev;sel.disabled=false;delete sel.dataset.prev}
+  h.textContent=fast?t("kNatFast"):fce?t("kNatFceHint"):""}
+function myFields(px){const both=$(px+"Valid").value==="both";$(px+"MyNatField").hidden=!both;$(px+"KNatField").hidden=!both;if(both)kNatHint(px);
   const v=$(px+"Valid").value;document.querySelector(`label[for="${px}My"]`).textContent=t(v==="fide"||v==="both"?"tMyFide":v==="nat"?"tMyNat":"tMy");
   $(px+"My").closest(".field").hidden=!v;const h=$(px+"ValidHint");h.hidden=v!=="none";h.textContent=t("friendlyWarn")}
 $("tValid").addEventListener("change",()=>{if(!$("tMy").dataset.touched)$("tMy").value=defMy($("tValid").value);
@@ -1173,6 +1198,8 @@ function setK(px,k){const sel=$(px+"K");
   $(px+"KOtherField").hidden=sel.value!=="other"}
 function readK(px){const v=$(px+"K").value;if(!v)return null;
   const k=v==="other"?Number(String($(px+"KOther").value).replace(",",".")):Number(v);return k>0?k:null}
+["t","m"].forEach(px=>$(px+"K").addEventListener("change",()=>{const v=$(px+"K").value;if(v&&v!=="other"&&px==="t")$("tKNat").value=String(defKNat(v))}));
+["t","m"].forEach(px=>$(px+"Min").addEventListener("input",()=>{if(!$(px+"KNatField").hidden)kNatHint(px)}));
 ["t","m"].forEach(px=>$(px+"K").addEventListener("change",()=>{$(px+"KOtherField").hidden=$(px+"K").value!=="other";if($(px+"K").value==="other")$(px+"KOther").focus()}));
 function readTc(px){const rm=$(px+"Min").value.trim(),ri=$(px+"Inc").value.trim();
   if(!/^\d+$/.test(rm)||!/^\d+$/.test(ri))return null;const mi=Number(rm),inc=Number(ri);
@@ -1204,7 +1231,7 @@ $("addPanel").addEventListener("submit",ev=>{ev.preventDefault();
   if(valid==="both"&&!myEloNat){$("addErr").textContent=t("errMyNat");$("tMyNat").focus();return}
   const kVal=readK("t");
   if(!kVal){$("addErr").textContent=t("errK");$("tK").focus();return}
-  const tr={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name,place:$("tPlace").value.trim(),start,end,valid,myElo,myEloNat,k:kVal,tc,
+  const tr={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name,place:$("tPlace").value.trim(),start,end,valid,myElo,myEloNat,k:kVal,kNat:valid==="both"?Number($("tKNat").value):null,tc,
     created:new Date().toISOString(),rounds:Array.from({length:rounds},()=>({color:"",opp:"",res:""}))};
   tours.push(tr);saveTours();toggleAdd(false);openTour(tr.id);offerUpdate(tr);
 });
@@ -1262,7 +1289,7 @@ function toggleMod(open){
   $("modPanel").hidden=!open;$("modAsk").hidden=open;$("modAsk").setAttribute("aria-expanded",open);$("modErr").textContent="";
   if(open){const tr=current;
     $("mName").value=tr.name;$("mRounds").value=tr.rounds.length;$("mPlace").value=tr.place||"";
-    $("mStart").value=tr.start||"";$("mEnd").value=tr.end||"";$("mValid").value=tr.valid||"";$("mMy").value=tr.myElo||"";$("mMyNat").value=tr.myEloNat||(tr.valid==="both"&&player&&player.nat)||"";myFields("m");$("mMin").value=tr.tc?tr.tc.min:"";$("mInc").value=tr.tc?tr.tc.inc:"";tcHint("m");setK("m",tr.k||(player&&player.k));$("mName").focus()}
+    $("mStart").value=tr.start||"";$("mEnd").value=tr.end||"";$("mValid").value=tr.valid||"";$("mMy").value=tr.myElo||"";$("mMyNat").value=tr.myEloNat||(tr.valid==="both"&&player&&player.nat)||"";$("mKNat").value=String(tr.kNat||defKNat(tr.k));myFields("m");$("mMin").value=tr.tc?tr.tc.min:"";$("mInc").value=tr.tc?tr.tc.inc:"";tcHint("m");setK("m",tr.k||(player&&player.k));$("mName").focus()}
 }
 $("modAsk").addEventListener("click",()=>toggleMod(true));
 $("modCancel").addEventListener("click",()=>toggleMod(false));
@@ -1286,7 +1313,7 @@ $("modPanel").addEventListener("submit",ev=>{ev.preventDefault();
   if(n<tr.rounds.length&&tr.rounds.slice(n).some(r=>r.color||r.opp||r.res)){err(T[lang].errShrink(n));return}
   if(n>tr.rounds.length)for(let i=tr.rounds.length;i<n;i++)tr.rounds.push({color:"",opp:"",res:""});
   else tr.rounds.length=n;
-  Object.assign(tr,{name,place:$("mPlace").value.trim(),start,end,valid,myElo,myEloNat,k:kVal,tc});
+  Object.assign(tr,{name,place:$("mPlace").value.trim(),start,end,valid,myElo,myEloNat,k:kVal,kNat:valid==="both"?Number($("mKNat").value):null,tc});
   commitEdits();toggleMod(false);renderEditor();
 });
 function renderEditor(){
@@ -1328,11 +1355,10 @@ function paintRes(sel,r,col){
 }
 let deltaEls=[];
 const fmtD=v=>{const r=Math.round(v*10)/10,a=Math.abs(r).toLocaleString(T[lang].locale,{minimumFractionDigits:1,maximumFractionDigits:1});return r>0?"+"+a:r<0?"−"+a:a};
-function roundDelta(tr,r,base){if(tr.valid==="none"||!base)return null;const s=myScore(r),opp=Number(r.opp);
-  if(s==null||!OTB[r.res]||!(opp>0))return null;return (tr.k||(player&&player.k)||20)*(s-expScore(base,opp))}
+
 function paintDeltas(){const tr=current;if(!tr)return;let tot=0,any=false,totN=0,anyN=false;
-  tr.rounds.forEach((r,i)=>{const el=deltaEls[i];const d=roundDelta(tr,r,tr.myElo);
-    if(tr.valid==="both"&&tr.myEloNat){const dn=roundDelta(tr,r,tr.myEloNat);if(dn!=null){totN+=dn;anyN=true}}
+  tr.rounds.forEach((r,i)=>{const el=deltaEls[i];const d=gameDelta(tr,r);
+    if(tr.valid==="both"&&tr.myEloNat){const dn=gameDelta(tr,r,"nat");if(dn!=null){totN+=dn;anyN=true}}
     if(!el)return;
     if(d==null){el.textContent=r.res&&r.res!=="--"&&tr.valid!=="none"?"–":"";el.className="rdelta none";return}
     tot+=d;any=true;const rr=Math.round(d*10)/10;el.textContent=fmtD(d);el.className="rdelta"+(rr>0?" pos":rr<0?" neg":"")});
@@ -1351,7 +1377,11 @@ function renderPerf(){
   const s=stats(current);
   $("ePerf").textContent=perfTxt(s.perf,s.n);$("ePerf").title=s.n&&s.n<MIN_PERF?t("perfFew"):"";
   $("ePts").textContent=fmtPts(s.pts)+" / "+s.played;
+  {const byes=current.rounds.filter(r=>r.res==="--").length,ps=$("ePtsSub");
+   ps.textContent=byes?fmtPts(s.pts)+" / "+(s.played-byes)+" "+t("noByes"):"";ps.className="delta"}
   $("eAvg").textContent=s.avg!=null?Math.round(s.avg):"—";
+  {const as=$("eAvgSub"),me=current.myElo;as.className="delta";
+   as.textContent=s.avg!=null&&me?T[lang].avgVs(Math.round(s.avg-me)):""}
   const d=$("eDelta");
   const useNat=current.valid==="nat"||(current.valid==="none"&&player&&!player.fide);
   const ref=current.myElo||(player&&(useNat?player.nat:player.fide));
@@ -1382,15 +1412,28 @@ function pool(){return tours.filter(tr=>{const c=tcClass(tr);if(c==="bullet"||tr
 function gamesOf(list){const out=[];[...list].sort(chrono).forEach(tr=>tr.rounds.forEach((r,i)=>{
   const s=myScore(r),opp=Number(r.opp);if(s==null||!OTB[r.res]||!(opp>0))return;
   out.push({tr,i,s,opp,my:tr.myElo||null,color:r.color})}));return out}
-const expScore=(my,opp)=>{const D=Math.max(-400,Math.min(400,my-opp));return 1/(1+10**(-D/400))};
+/* Rating engine. Expected scores come from the official FIDE/FCE table (FIDE Rating Regs 8.1.2 · FCE Reglament art. 39–41).
+   FIDE list: a difference over 400 counts as 400. FCE (Catalan) list: no cap, the table runs to >735 (0.99). */
+const PDT=[[3,.50],[10,.51],[17,.52],[25,.53],[32,.54],[39,.55],[46,.56],[53,.57],[61,.58],[68,.59],[76,.60],[83,.61],[91,.62],[98,.63],[106,.64],[113,.65],[121,.66],[129,.67],[137,.68],[145,.69],[153,.70],[162,.71],[170,.72],[179,.73],[188,.74],[197,.75],[206,.76],[215,.77],[225,.78],[235,.79],[245,.80],[256,.81],[267,.82],[278,.83],[290,.84],[302,.85],[315,.86],[328,.87],[344,.88],[357,.89],[374,.90],[391,.91],[411,.92],[432,.93],[456,.94],[484,.95],[517,.96],[559,.97],[619,.98],[735,.99]];
+function pdTable(ad){for(const [m,p] of PDT)if(ad<=m)return p;return .99}
+const natSys=()=>(player&&player.natSys)||"fce";
+const fceRules=list=>list==="nat"&&natSys()==="fce";
+function expList(my,opp,list){const d=Math.round(my-opp);let ad=Math.abs(d);if(!fceRules(list))ad=Math.min(ad,400);const p=pdTable(ad);return d>=0?p:1-p}
+const expScore=(my,opp)=>expList(my,opp,"fide");
+const listOf=tr=>tr.valid==="nat"?"nat":"fide";
+function baseFor(tr,list){if(tr.valid==="none")return null;if(list==="nat")return tr.valid==="nat"?tr.myElo:tr.valid==="both"?tr.myEloNat:null;return tr.valid==="nat"?null:tr.myElo}
+function kFor(tr,list){const k=tr.k||(player&&player.k)||20;if(list!=="nat")return k;
+  if(fceRules(list)){const c=tcClass(tr);if(c==="rapid"||c==="blitz")return 20}
+  if(tr.valid==="nat")return k;return tr.kNat||(natSys()==="fce"&&k===10?20:k)}
+// Elo change of one game for one list (null = not rated)
+function gameDelta(tr,r,list){list=list||listOf(tr);const base=baseFor(tr,list);if(!base)return null;
+  const s=myScore(r);if(s==null)return null;const K=kFor(tr,list);
+  if(fceRules(list)&&r.res&&(r.res==="+-"||r.res==="-+")&&s===1)return (K/2)*(1-.5);   // FCE art. 33: forfeit win vs equal rating, half K
+  const opp=Number(r.opp);if(!OTB[r.res]||!(opp>0))return null;return K*(s-expList(base,opp,list))}
 function perfOf(gs){if(!gs.length)return null;const avg=gs.reduce((a,g)=>a+g.opp,0)/gs.length,p=gs.reduce((a,g)=>a+g.s,0)/gs.length;return Math.round(avg+dp(p))}
-function eloGain(tr,base){
-  base=base||tr.myElo;if(tr.valid==="none"||!base)return null;
-  const k=tr.k||(player&&player.k)||20;let sum=0,n=0;
-  tr.rounds.forEach(r=>{const s=myScore(r),opp=Number(r.opp);
-    if(s==null||!OTB[r.res]||!(opp>0))return;sum+=s-expScore(base,opp);n++});
-  return n?{d:Math.round(k*sum*10)/10,k}:null;
-}
+function eloGain(tr,list){list=list||listOf(tr);if(!baseFor(tr,list))return null;let sum=0,n=0;
+  tr.rounds.forEach(r=>{const d=gameDelta(tr,r,list);if(d!=null){sum+=d;n++}});
+  return n?{d:Math.round(sum*10)/10,k:kFor(tr,list)}:null}
 const fmtGain=v=>(v>0?"+":v<0?"−":"±")+Math.abs(v).toLocaleString(T[lang].locale,{maximumFractionDigits:1});
 const fmtNum=v=>v.toLocaleString(T[lang].locale,{minimumFractionDigits:1,maximumFractionDigits:1});
 const fmtSigned=v=>(v>0?"+":v<0?"−":"±")+Math.abs(v);
@@ -1421,8 +1464,8 @@ function wdl(w,d,l){const n=w+d+l,box=mk("div","wdl");const bar=mk("div","bar"+(
     [["w",w,"rW","good"],["d",d,"rD","draw"],["l",l,"rL","bad"]].forEach(([c,x,lb,tok])=>{const s=mk("span");const i=mk("i");i.style.background=`var(--${tok})`;s.append(i,`${t(lb)} ${Math.round(100*x/n)} %`);pct.append(s)})}
   box.style.display="flex";box.style.flexDirection="column";box.style.gap="6px";box.append(bar);if(n)box.append(pct);return box}
 const countWDL=gs=>({w:gs.filter(g=>g.s===1).length,d:gs.filter(g=>g.s===.5).length,l:gs.filter(g=>g.s===0).length});
-function expVsReal(gs){const m=gs.filter(g=>g.my);return{e:m.reduce((a,g)=>a+expScore(g.my,g.opp),0),r:m.reduce((a,g)=>a+g.s,0),n:m.length,
-  elo:m.reduce((a,g)=>a+(g.tr.k||(player&&player.k)||20)*(g.s-expScore(g.my,g.opp)),0)}}
+function expVsReal(gs){const m=gs.filter(g=>g.my);return{e:m.reduce((a,g)=>a+expList(g.my,g.opp,listOf(g.tr)),0),r:m.reduce((a,g)=>a+g.s,0),n:m.length,
+  elo:m.reduce((a,g)=>a+(gameDelta(g.tr,g.tr.rounds[g.i])||0),0)}}
 function evrLine(x,big){const box=mk("div","evr2"+(big?" big":""));if(!x.n)return box;
   const L=T[lang],d=x.r-x.e,a=Math.abs(d),tone=a<0.25?"eq":d>0?"up":"down";
   box.classList.add(tone);
@@ -1542,7 +1585,7 @@ const RENDER={
       b.addEventListener("click",()=>{curveList=k;renderSec()});seg.append(b)});
     body.append(seg);
     const baseOf=tr=>curveList==="fide"?(tr.valid==="fide"||tr.valid==="both"?tr.myElo:null):(tr.valid==="nat"?tr.myElo:tr.valid==="both"?tr.myEloNat:null);
-    const items=[...statList].filter(tr=>baseOf(tr)).sort(chrono).map(tr=>{const a=baseOf(tr),g=eloGain(tr,a);return{tr,a,b:g?a+g.d:null,g}});
+    const items=[...statList].filter(tr=>baseOf(tr)).sort(chrono).map(tr=>{const a=baseOf(tr),g=eloGain(tr,curveList);return{tr,a,b:g?a+g.d:null,g}});
     if(!items.length){body.append(mk("div","empty-state",t("noCurve")));return}
     const lastI=items[items.length-1],now=Math.round(lastI.b??lastI.a),first=items[0].a;
     const peak=Math.round(Math.max(...items.flatMap(i=>[i.a,i.b]).filter(v=>v!=null)));
@@ -1640,7 +1683,7 @@ const RENDER={
     const card=(ic,title,val,detail)=>{const c=mk("div","rec"),i=mk("span","sic");i.innerHTML=icon(ic);const tx=mk("div","rtx");
       tx.append(mk("span","lbl",title),mk("span","rv",val));if(detail)tx.append(mk("span","rd",detail));c.append(i,tx);list.append(c);return tx};
     // Elo swing of one game, at the Elo frozen in its tournament (null if the tournament isn't rated)
-    const swing=g=>g.my&&g.tr.valid!=="none"?(g.tr.k||(player&&player.k)||20)*(g.s-expScore(g.my,g.opp)):null;
+    const swing=g=>gameDelta(g.tr,g.tr.rounds[g.i]);
     const mini=(tx,arr)=>{const ul=mk("ul","minilist");arr.slice(0,3).forEach(g=>{const w=swing(g);
       ul.append(mk("li",null,`${g.opp} (${fmtSigned(g.opp-g.my)}) · ${g.tr.name} R${g.i+1}`+(w!=null?` · ${fmtGain(Math.round(w*10)/10)}`:"")))});tx.append(ul)};
     // 1. Elo defeated
@@ -1726,7 +1769,7 @@ $("demoBtn").addEventListener("click",()=>{if(hasDemo()){tours=tours.filter(x=>!
 $("clearDemo").addEventListener("click",()=>{tours=tours.filter(x=>!x.demo);saveTours();renderList()});
 
 /* ---------- about / feedback / donate ---------- */
-const CONFIG={version:"1.1",formKey:"6b7143c0-ee47-4d96-a039-fd96e847fcd7",paypal:"https://paypal.me/arpadelocalc"};   // formKey: Web3Forms access key (messages reach the mailbox without exposing it)
+const CONFIG={version:"1.2",formKey:"6b7143c0-ee47-4d96-a039-fd96e847fcd7",paypal:"https://paypal.me/arpadelocalc"};   // formKey: Web3Forms access key (messages reach the mailbox without exposing it)
 function openInfo(v){show(v);
   if(v==="Backup")renderBackup();
   if(v==="About")$("aboutVer").textContent=t("version")+" "+CONFIG.version;
@@ -1784,7 +1827,7 @@ async function makeCard(tr,theme){
   g.font=`500 ${mfs}px ${F.body}`;while(g.measureText(meta).width>W-2*P&&mfs>20){mfs-=2;g.font=`500 ${mfs}px ${F.body}`}
   y+=4;wrapLines(g,meta,W-2*P,2).forEach(l=>{g.fillText(l,P,y);y+=mfs+12});
   // key figures
-  const s=stats(tr),gF=eloGain(tr),gN=tr.valid==="both"&&tr.myEloNat?eloGain(tr,tr.myEloNat):null;
+  const s=stats(tr),gF=eloGain(tr),gN=tr.valid==="both"&&tr.myEloNat?eloGain(tr,"nat"):null;
   y+=30;const gap=20,tw=(W-2*P-2*gap)/3,th=176;
   const tiles=[[T[lang].points,fmtPts(s.pts)+" / "+tr.rounds.length,C.ink],[T[lang].perf,perfTxt(s.perf,s.n),C.ink],
     tr.valid==="none"?[T[lang].cardElo,T[lang].vShort.none,C.mut]:gF?[T[lang].cardElo,fmtGain(gF.d),gF.d>=0?C.good:C.bad]:[T[lang].cardElo,"—",C.mut]];
@@ -1816,8 +1859,8 @@ async function makeCard(tr,theme){
   if(ev.length)lines.push(ev.join("  ·  ")+" ("+T[lang].cardEst+")");
   lines.forEach(l=>{g.fillText(l,P,y);y+=44});
   // Elo evolution through the tournament (cumulative, round by round)
-  if(tr.valid!=="none"&&tr.myElo){const k=tr.k||(player&&player.k)||20;let acc=0;const pts=[0];
-    tr.rounds.forEach(r=>{const sc=myScore(r),opp=Number(r.opp);if(sc!=null&&OTB[r.res]&&opp>0)acc+=k*(sc-expScore(tr.myElo,opp));pts.push(acc)});
+  if(tr.valid!=="none"&&tr.myElo){let acc=0;const pts=[0];
+    tr.rounds.forEach(r=>{acc+=gameDelta(tr,r)||0;pts.push(acc)});
     const top=y+30,bot=H-232;if(bot-top>100){
       g.fillStyle=C.mut;g.font=`600 24px ${F.body}`;ls("2px");g.fillText(T[lang].cardEvo.toUpperCase(),P,top);ls("0px");
       const y0=top+56,y1=bot,hiV=Math.max(2,...pts),loV=Math.min(-2,...pts),xs=i=>P+i*(W-2*P)/(pts.length-1),ys=v=>y0+(hiV-v)/(hiV-loV)*(y1-y0);
@@ -1871,14 +1914,14 @@ function cleanTour(x){
   const tr={id:typeof x.id==="string"&&x.id?x.id.slice(0,40):Date.now().toString(36)+Math.random().toString(36).slice(2,6),
     name:str(x.name,80).trim()||"—",place:str(x.place,80),start:date(x.start),end:date(x.end),
     valid:VALID_OK.has(x.valid)?x.valid:"",myElo:isNum(x.myElo)?Math.round(x.myElo):null,myEloNat:isNum(x.myEloNat)?Math.round(x.myEloNat):null,
-    k:isNum(x.k)&&x.k>0?x.k:null,created:typeof x.created==="string"?x.created.slice(0,40):new Date().toISOString(),
+    k:isNum(x.k)&&x.k>0?x.k:null,kNat:isNum(x.kNat)&&x.kNat>0?x.kNat:null,created:typeof x.created==="string"?x.created.slice(0,40):new Date().toISOString(),
     rounds:x.rounds.map(r=>({color:r&&(r.color==="w"||r.color==="b")?r.color:"",opp:r&&/^\d{0,4}$/.test(String(r.opp??""))?String(r.opp??""):"",res:r&&RES_OK.has(r.res)?r.res:""}))};
   if(x.tc&&Number.isInteger(x.tc.min)&&Number.isInteger(x.tc.inc))tr.tc={min:x.tc.min,inc:x.tc.inc};
   if(x.demo===true)tr.demo=true;return tr}
 function parseBackup(text){let o;try{o=JSON.parse(text)}catch(e){return null}
   if(!o||o.app!=="arpad"||!Array.isArray(o.tours))return null;
   const ts=o.tours.map(cleanTour).filter(Boolean);
-  let p=null;const q=o.player;if(q&&typeof q==="object")p={name:typeof q.name==="string"?q.name.slice(0,60):"",fide:isNum(q.fide)?Math.round(q.fide):null,nat:isNum(q.nat)?Math.round(q.nat):null,k:isNum(q.k)&&q.k>0?q.k:null};
+  let p=null;const q=o.player;if(q&&typeof q==="object")p={name:typeof q.name==="string"?q.name.slice(0,60):"",fide:isNum(q.fide)?Math.round(q.fide):null,nat:isNum(q.nat)?Math.round(q.nat):null,k:isNum(q.k)&&q.k>0?q.k:null,natSys:q.natSys==="fide"?"fide":"fce"};
   return{tours:ts,player:p,exported:typeof o.exported==="string"?o.exported:""}}
 let pendingImport=null;
 function renderBackup(){const last=store.get("arpad.lastBackup");
